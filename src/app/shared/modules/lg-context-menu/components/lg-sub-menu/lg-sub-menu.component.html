@@ -1,0 +1,15 @@
+
+<button mat-menu-item [matMenuTriggerFor]="subMenu">
+  <mat-icon>{{item.icon}}</mat-icon>
+  <span>{{item.name}}</span>
+</button>
+
+<mat-menu #subMenu="matMenu" (contextmenu)="closeMenu();" class="lg-context-menu" >
+<ng-container *ngFor="let subItem of item.subMenu">
+  <button mat-menu-item *ngIf="!subItem?.subMenu && !(isHidden(subItem?.hidden) | async)" (click)="subItem.action(targetItem);" disabled="{{ isDisabled(subItem?.disabled) | async }}" >
+    <mat-icon>{{subItem.icon}}</mat-icon>
+    <span>{{subItem.name}}</span>
+  </button>
+  <lg-sub-menu *ngIf="subItem?.subMenu && !(isHidden(subItem?.hidden) | async)" [item]="subItem" [targetItem]="targetItem" ></lg-sub-menu>
+</ng-container>
+</mat-menu>

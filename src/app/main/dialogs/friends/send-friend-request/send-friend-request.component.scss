@@ -1,0 +1,19 @@
+.header {
+    font-family: nunito;
+    color: #686868;
+    background-color: transparent;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
+
+.toolbar-container {
+    flex: 0 0 auto;
+    margin: 0px;
+    padding: 0px;
+}

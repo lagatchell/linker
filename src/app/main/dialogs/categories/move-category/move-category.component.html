@@ -1,0 +1,19 @@
+<div mat-dialog-title class="header">
+  <mat-icon mat-list-icon>folder</mat-icon> <span>Move {{data.title}}</span>
+</div>
+<mat-dialog-content>
+  <mat-form-field class="example-full-width">
+    <mat-select placeholder="Select Category" [(ngModel)]="selectedCategory">
+      <mat-option [value]="rootCategory" *ngIf="data.parentCategoryId">
+        {{rootCategory.title}}
+      </mat-option>
+      <mat-option *ngFor="let category of categories | async" [value]="category">
+        {{ category.title }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="move();" >Move</button>
+  <button mat-raised-button (click)="onNoClick();" >Cancel</button>
+</mat-dialog-actions>

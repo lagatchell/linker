@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+.mat-app-background {
+    margin: 0px;
+}
+
+mat-icon-button cdk-focused cdk-mouse-focused {
+    outline: none;
+    border: none;
+}
+
+button:focus {
+    outline: none !important;
+    border: none !important;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}

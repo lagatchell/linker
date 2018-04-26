@@ -1,0 +1,13 @@
+<div mat-dialog-title class="header">
+  <mat-icon mat-list-icon>folder_shared</mat-icon> <span>Share Request</span>
+</div>
+<br />
+<mat-dialog-content>
+  <label>{{data.senderEmail}} would like to share {{data.title | uppercase}} with you.</label>
+  <br />
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="acceptRequest();" >Accept</button>
+  <button mat-raised-button color="warn" (click)="removeRequest();" >Deny</button>
+  <button mat-raised-button (click)="onNoClick();" >Cancel</button>
+</mat-dialog-actions>

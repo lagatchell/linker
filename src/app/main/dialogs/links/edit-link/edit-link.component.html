@@ -1,0 +1,19 @@
+<div mat-dialog-title class="header">
+  <mat-icon mat-list-icon>mode_edit</mat-icon> <span>Edit Link</span>
+</div>
+<br />
+<mat-dialog-content>
+  <mat-form-field class="example-full-width">
+      <input matInput placeholder="Link Alias" [(ngModel)]="linkAlias" >
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <input matInput placeholder="Link Url" [(ngModel)]="linkUrl" >
+  </mat-form-field>
+  <mat-form-field class="example-full-width">
+    <textarea matInput placeholder="Link Description" [(ngModel)]="linkDescription"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="saveLink();" >Save</button>
+  <button mat-raised-button (click)="onNoClick();" >Cancel</button>
+</mat-dialog-actions>

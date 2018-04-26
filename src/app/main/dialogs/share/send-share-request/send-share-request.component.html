@@ -1,0 +1,16 @@
+<div mat-dialog-title class="header">
+  <mat-icon mat-list-icon>folder_shared</mat-icon> <span>Share {{data.title}}</span>
+</div>
+<mat-dialog-content>
+  <mat-form-field class="example-full-width">
+    <mat-select placeholder="Select Friend" [(ngModel)]="selectedFriend">
+      <mat-option *ngFor="let friend of friends" [value]="friend">
+        {{ friend.email }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="share();" >Share</button>
+  <button mat-raised-button (click)="onNoClick();" >Cancel</button>
+</mat-dialog-actions>

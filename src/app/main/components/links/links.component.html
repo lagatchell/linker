@@ -1,0 +1,23 @@
+<mat-drawer-container>
+    <link-grid></link-grid>
+    <mat-drawer #drawer class="right-sidenav" mode="side" opened="true" position="start">
+        <mat-toolbar class="toolbar-container" >
+            <mat-toolbar-row class="toolbar">
+                <span>My Categories</span>
+                <span class="toolbar-spacer"></span>
+                <button mat-icon-button (click)="addCategory();" matTooltip="Add Category" ><mat-icon>create_new_folder</mat-icon></button>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <div class="tree-container">
+            <category-tree></category-tree>
+        </div>
+        <mat-toolbar class="toolbar-container" >
+            <mat-toolbar-row class="toolbar">
+                <span>Shared With Me</span>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <div class="tree-container">
+            <shared-category-tree></shared-category-tree>
+        </div>
+    </mat-drawer>
+</mat-drawer-container>

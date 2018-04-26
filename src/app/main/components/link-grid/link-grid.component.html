@@ -1,0 +1,29 @@
+<div class="flex-container">
+  <mat-toolbar class="toolbar-container">
+    <mat-toolbar-row class="toolbar">
+        <div>
+          <label>{{(category)? category.title : ''}}</label>
+        </div>
+        <span class="toolbar-spacer"></span>
+        <button mat-raised-button (click)="addLink();" color="primary" *ngIf="category && !isSharedFolder" matTooltip="Add Link">
+          <mat-icon mat-list-icon>link</mat-icon>+
+        </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div class="link-container" [lg-ctx-menu]="menuItems" [target-item]="category">
+    <mat-card *ngFor="let linkItem of links" class="category-card" matTooltip="{{linkItem.linkUrl}}" (click)="openLink(linkItem.linkUrl);" [lg-ctx-menu]="linkMenuItems" [target-item]="linkItem">
+      <mat-card-title>
+          <label class="clickable"><img class="link-favicon" src="https://plus.google.com/_/favicon?domain_url={{linkItem.linkUrl}}" alt="favicon" /> {{ (linkItem.alias.length>45)? (linkItem.alias | slice:0:45)+'...':(linkItem.alias) }}</label>
+      </mat-card-title>
+      <mat-card-content>
+          <p *ngIf="linkItem.alias.length<30 && linkItem.shortDescription !== ''" >
+            {{ (linkItem.shortDescription.length>(30 - linkItem.alias.length))?(linkItem.shortDescription | slice:0:(30 - linkItem.alias.length))+'...':(linkItem.shortDescription)}}
+          </p>
+      </mat-card-content>
+    </mat-card>
+    <div class="empty-state" *ngIf="links.length === 0">
+        <mat-icon>not_interested</mat-icon>
+        <label>Nothing to Display</label>
+    </div>
+  </div>
+</div>
