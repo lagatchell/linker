@@ -26,7 +26,6 @@ export class SubCategoryComponent implements OnInit {
       name: 'Add sub-category',
       icon: 'create_new_folder',
       action: (category: Category) => {
-        console.log(category.id);
         this.dialog.open(AddCategoryDialog, {
           height: '300px',
           width: '350px',

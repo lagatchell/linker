@@ -8,6 +8,7 @@ import { AcceptFriendRequestDialog } from '../../../../../main/dialogs/friends/a
 import { MatDialog } from '@angular/material';
 import { AcceptShareRequestDialog } from '../../../../../main/dialogs/share/accept-share-request/accept-share-request.component';
 import { SendFriendRequestDialog } from '../../../../../main/dialogs/friends/send-friend-request/send-friend-request.component';
+import { SidenavService } from '../../../../../main/services/sidenav.service';
 
 @Component({
   selector: 'nav-bar',
@@ -22,17 +23,24 @@ export class NavBarComponent implements OnInit {
   private friendRequests: any[] = [];
   private notificationCount: number = 0;
   public notificationText: string = '';
+  private sideNavOpenState: boolean = true;
+  public menuText: string = 'Close Menu';
 
   constructor(
     private router: Router,
     private dialog: MatDialog,
     private authService: AuthService,
     private notificationService: NotificationService,
-    private shareService: ShareService
+    private shareService: ShareService,
+    private sideNavService: SidenavService
   ) { }
 
   ngOnInit() {
     this.getUserAuthState();
+
+    this.sideNavService.sideNavOpenState.subscribe((openState) => {
+      this.sideNavOpenState = openState;
+    });
   }
 
   getUserAuthState() {
@@ -99,4 +107,15 @@ export class NavBarComponent implements OnInit {
     });
   }
 
+  collapse() {
+    this.sideNavService.sideNavOpenState.next(!this.sideNavOpenState);
+
+    if (this.sideNavOpenState) {
+      this.menuText = 'Close Menu';
+    }
+    else {
+      this.menuText = 'Open Menu';
+    }
+
+  }
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { LinkService } from '../../../services/link.service';
 
 @Component({
@@ -14,9 +14,12 @@ export class EditLinkDialog implements OnInit {
   linkUrl: string;
   linkDescription: string = "";
 
+  @ViewChild('linkurl') linkurl: ElementRef;
+
   constructor(
     public dialogRef: MatDialogRef<EditLinkDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private snackBar: MatSnackBar,
     private linkService: LinkService
   ) { }
 
@@ -33,6 +36,15 @@ export class EditLinkDialog implements OnInit {
   saveLink() {
     this.linkService.updateLinkItem(this.data.categoryId, this.data.id, this.linkAlias, this.linkDescription, this.linkUrl);
     this.onNoClick();
+  }
+
+  copyToClipBoard() {
+    this.linkurl.nativeElement.select();
+    document.execCommand('Copy');
+    
+    this.snackBar.open('Copied to Clipboard', '', {
+      duration: 2000,
+    });
   }
 
 }

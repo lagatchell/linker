@@ -14,7 +14,7 @@
     margin: 10px;
     flex: 1 1 auto;
     height: 100%;
-    align-content: start;
+    align-content: flex-start;
 }
 
 mat-card {
@@ -33,7 +33,7 @@ mat-card {
 }
 
 .category-card:hover {
-    background-color:#f5f5f5;
+    background-color:rgba(63, 81, 181, 0.1); //#f5f5f5;
     cursor: pointer;
 }
 

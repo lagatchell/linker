@@ -8,16 +8,16 @@
 }
 
 .node-button:hover {
-    background-color: #f5f5f5;
+    background-color: rgba(63, 81, 181, 0.1); //#f5f5f5;
 }
 
 .node-button:focus {
-    background-color: #f5f5f5;
+    background-color: rgba(63, 81, 181, 0.1); //#f5f5f5;
 }
 
 .empty-state {
     width: 100%;
-    margin-left: 20px;
+    padding-left: 20px;
 }
 
 .empty-state>label {

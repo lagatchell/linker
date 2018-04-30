@@ -19,7 +19,7 @@ export class CategoryTreeComponent implements OnInit {
   rootCategories: Category[] = [];
   menuItems: LgMenuItem[] = [
     {
-      name: 'New sub-category',
+      name: 'Add sub-category',
       icon: 'create_new_folder',
       action: (category: Category) => {
         this.dialog.open(AddCategoryDialog, {

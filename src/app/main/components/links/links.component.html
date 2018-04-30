@@ -1,6 +1,6 @@
-<mat-drawer-container>
+<mat-drawer-container (window:resize)="onResize($event)">
     <link-grid></link-grid>
-    <mat-drawer #drawer class="right-sidenav" mode="side" opened="true" position="start">
+    <mat-drawer #drawer class="right-sidenav" mode="{{sideNavMode}}" opened="{{sideNavOpenState | async}}" position="start">
         <mat-toolbar class="toolbar-container" >
             <mat-toolbar-row class="toolbar">
                 <span>My Categories</span>

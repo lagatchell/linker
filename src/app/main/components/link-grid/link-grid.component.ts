@@ -36,6 +36,23 @@ export class LinkGridComponent implements OnInit {
       }
     },
     {
+      name: 'Copy',
+      icon: 'content_copy',
+      action: (linkItem: LinkItem) => {
+
+        let linkCopy: LinkItem = {
+          alias: linkItem.alias + '-COPY',
+          linkUrl: linkItem.linkUrl,
+          shortDescription: linkItem.shortDescription
+        };
+
+        this.linkService.createLinkItem(this.category.id, linkCopy);
+      },
+      hidden: () => {
+        return of(this.isSharedFolder);
+      }
+    },
+    {
       name: 'Edit',
       icon: 'mode_edit',
       action: (linkItem: LinkItem) => {

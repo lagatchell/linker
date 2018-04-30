@@ -7,7 +7,8 @@
       <input matInput placeholder="Link Alias" [(ngModel)]="linkAlias" >
   </mat-form-field>
   <mat-form-field class="example-full-width">
-    <input matInput placeholder="Link Url" [(ngModel)]="linkUrl" >
+    <input #linkurl matInput placeholder="Link Url" [(ngModel)]="linkUrl" >
+    <span matSuffix class="clickable" (click)="copyToClipBoard();" matTooltip="Copy to Clipboard" ><mat-icon>content_copy</mat-icon></span>
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <textarea matInput placeholder="Link Description" [(ngModel)]="linkDescription"></textarea>

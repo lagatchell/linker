@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   email: string;
   password: string;
+  loginErrorMessage: string = '';
 
   constructor(
     private authService: AuthService, 
@@ -24,6 +25,9 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.email, this.password).then(() => {
         this.router.navigate(['/']);
       })
+      .catch((error) => {
+        this.loginErrorMessage = error;
+      });
     }
   }
 

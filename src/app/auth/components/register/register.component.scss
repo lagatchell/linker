@@ -30,6 +30,11 @@ mat-card {
     width: 500px;
 }
 
+.error-message {
+    padding: 5px;
+    margin: 10px;
+}
+
 @media screen and (max-width: 550px) {
     mat-card {
         width: 80%;

@@ -104,10 +104,37 @@ export class LinkService {
     .then(() => {
       newRef.update({
           categoryId: categoryId
-      }).then(() => {
+      })
+      .then(() => {
+        let oldCategoryRef = this.afdb.database.ref(`${this.authService.authUser.uid}/categories`).child(linkItem.categoryId);
+        let newCategoryRef = this.afdb.database.ref(`${this.authService.authUser.uid}/categories`).child(categoryId);
+        
+        newCategoryRef.once('value', (category) => {
+          newCategoryRef.update({
+            linkCount: (parseInt(category.val().linkCount) + 1)
+          }).catch((error) => {
+            console.log(error);
+          });
+        });
+
+        oldCategoryRef.once('value', (category) => {
+          oldCategoryRef.update({
+            linkCount: (parseInt(category.val().linkCount) - 1)
+          }).then(() => {
+            this.snackBar.open(`Delete Successful`, '', {
+              duration: 2000,
+          });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        });
+
+      })
+      .then(() => {
         this.snackBar.open(`Update Successful`, '', {
           duration: 2000,
-      });
+        });
       })
       .catch((error) => {
         console.log(error);

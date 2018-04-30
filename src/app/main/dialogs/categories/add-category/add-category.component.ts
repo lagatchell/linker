@@ -24,7 +24,6 @@ export class AddCategoryDialog implements OnInit {
     if (this.categoryTitle !== null && this.categoryTitle.trim() !== '') {
       let newCategory: Category = new Category(this.categoryTitle);
       let parentCategoryId = (this.data.parentCategoryId)? this.data.parentCategoryId : null;
-      console.log(parentCategoryId);
       this.categoryService.createLinkCategory(newCategory, parentCategoryId);
       this.onNoClick();
     }

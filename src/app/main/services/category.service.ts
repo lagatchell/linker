@@ -4,15 +4,23 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthService } from '../../auth/services/auth.service';
 import { Category } from '../models/category';
 import { MatSnackBar } from '@angular/material';
+import { LinkService } from './link.service';
 
 @Injectable()
 export class CategoryService {
+
+  category: Category = null;
   
   constructor(
     private snackBar: MatSnackBar,
     private authService: AuthService,
     private afdb: AngularFireDatabase,
-  ) { }
+    private linkService: LinkService
+  ) { 
+      this.linkService.category.subscribe((category: Category) => {
+        this.category = category;
+      });
+  }
 
   getRootCategories$() {
     return this.afdb.list<Category>(`${this.authService.authUser.uid}/categories`).valueChanges().map((categories: Category[]) => {
@@ -55,12 +63,17 @@ export class CategoryService {
   deleteLinkCategory(categoryId: string) {
     this.afdb.list(`${this.authService.authUser.uid}/categories/${categoryId}`).remove();
     this.afdb.list(`${this.authService.authUser.uid}/links/${categoryId}`).remove();
+
+    if (this.category.id == categoryId) {
+      this.linkService.category.next(null);
+    }
+
     this.deleteLinkSubCategories(categoryId)
-      .then(() => {
-        this.snackBar.open('Delete Successful', '', {
-          duration: 2000,
+    .then(() => {
+      this.snackBar.open('Delete Successful', '', {
+        duration: 2000,
       });
-      });
+    });
   }
 
   deleteLinkSubCategories(parentCategoryId: string) {

@@ -4,7 +4,9 @@
         <div class="example-header">
             <h3>Sign Up</h3>
         </div>
-
+        <div class="error-message alert alert-danger" *ngIf="registerErrorMessage !== ''">
+            {{registerErrorMessage}}
+        </div>
         <!-- Username -->
         <mat-form-field>
             <input matInput placeholder="Email" id="email" [(ngModel)]="email" name="email" required #em="ngModel">

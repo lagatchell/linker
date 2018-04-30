@@ -41,6 +41,7 @@ import { SendShareRequestDialog } from './main/dialogs/share/send-share-request/
 import { AcceptShareRequestDialog } from './main/dialogs/share/accept-share-request/accept-share-request.component';
 import { MoveCategoryDialog } from './main/dialogs/categories/move-category/move-category.component';
 import { MoveLinkDialog } from './main/dialogs/links/move-link/move-link.component';
+import { SidenavService } from './main/services/sidenav.service';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { MoveLinkDialog } from './main/dialogs/links/move-link/move-link.compone
     LinkService,
     FriendsService,
     NotificationService,
-    ShareService
+    ShareService,
+    SidenavService
   ],
   bootstrap: [AppComponent]
 })
