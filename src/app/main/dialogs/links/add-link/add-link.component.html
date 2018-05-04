@@ -7,7 +7,7 @@
       <input matInput placeholder="Link Alias" [(ngModel)]="linkAlias" >
   </mat-form-field>
   <mat-form-field class="example-full-width">
-    <input matInput placeholder="Link Url" [(ngModel)]="linkUrl" >
+    <input matInput placeholder="Link Url" [(ngModel)]="linkUrl" (keyup.enter)="createLink();">
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <textarea matInput placeholder="Link Description" [(ngModel)]="linkDescription"></textarea>

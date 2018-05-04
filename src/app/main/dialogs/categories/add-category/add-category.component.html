@@ -1,10 +1,10 @@
 <div mat-dialog-title class="header" >
-  <mat-icon aria-label="Add Category" title="Add Category">folder_open</mat-icon> <span>Create Category</span>
+  <mat-icon aria-label="Add Category" title="Add Category">create_new_folder</mat-icon> <span>Add Category</span>
 </div>
 <br />
 <mat-dialog-content>
   <mat-form-field class="example-full-width">
-      <input matInput placeholder="Category Title" [(ngModel)]="categoryTitle" >
+      <input matInput placeholder="Category Title" [(ngModel)]="categoryTitle" (keyup.enter)="createCategory();" >
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>

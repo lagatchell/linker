@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 import { AngularFireAuth } from 'angularfire2/auth';
 
@@ -18,6 +19,7 @@ export class AuthService implements CanActivate {
 
   constructor( 
     public afAuth: AngularFireAuth,
+    private afdb: AngularFireDatabase,
     private router: Router
   ) { 
       this.setAuthState();
@@ -51,7 +53,15 @@ export class AuthService implements CanActivate {
   }
 
   register(email: string, password: string) {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+    return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+    .then(() => {
+        let dbRef = this.afdb.database.ref('users');
+        let newUser = dbRef.push();
+        newUser.set ({
+            email: email,
+            id: newUser.key,
+        });
+    });
   }
 
   login(loginEmail: string, loginPassword: string) {

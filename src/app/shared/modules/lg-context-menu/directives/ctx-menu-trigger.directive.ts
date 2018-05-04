@@ -38,6 +38,7 @@ export class CtxMenuTriggerDirective {
     // Create and attach a new instance of the LgCtxMenuComponent
     this.ctxMenuService.attach();
 
+
     // Return false to prevent the default context menu from showing
     return false;
   }

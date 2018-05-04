@@ -9,6 +9,10 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <br />
+  <mat-form-field class="example-full-width">
+    <textarea matInput placeholder="Message" [(ngModel)]="messageText"></textarea>
+  </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-raised-button color="primary" (click)="share();" >Share</button>

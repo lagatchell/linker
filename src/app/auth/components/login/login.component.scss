@@ -30,9 +30,23 @@ mat-card {
     width: 500px;
 }
 
+mat-form-field {
+    width: 100%;
+}
+
 .error-message {
     padding: 5px;
     margin: 10px;
+}
+
+input[type=password] {
+    border: none;
+    background: transparent;
+}
+
+input[type=password]:not([readonly]):focus {
+    border: none;
+    background: transparent;
 }
 
 @media screen and (max-width: 550px) {

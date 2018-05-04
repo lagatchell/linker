@@ -53,7 +53,7 @@ export class CategoryService {
     .then(()=>{
       this.snackBar.open('Update Successful', '', {
         duration: 2000,
-    });
+      });
     })
     .catch((error) => {
       console.log(error);
@@ -64,7 +64,7 @@ export class CategoryService {
     this.afdb.list(`${this.authService.authUser.uid}/categories/${categoryId}`).remove();
     this.afdb.list(`${this.authService.authUser.uid}/links/${categoryId}`).remove();
 
-    if (this.category.id == categoryId) {
+    if (this.category !== null && this.category.id === categoryId) {
       this.linkService.category.next(null);
     }
 

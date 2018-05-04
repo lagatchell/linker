@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { AcceptShareRequestDialog } from '../../../../../main/dialogs/share/accept-share-request/accept-share-request.component';
 import { SendFriendRequestDialog } from '../../../../../main/dialogs/friends/send-friend-request/send-friend-request.component';
 import { SidenavService } from '../../../../../main/services/sidenav.service';
+import { UserEditDialog } from '../../../../../main/dialogs/user/user-edit/user-edit.component';
 
 @Component({
   selector: 'nav-bar',
@@ -24,7 +25,6 @@ export class NavBarComponent implements OnInit {
   private notificationCount: number = 0;
   public notificationText: string = '';
   private sideNavOpenState: boolean = true;
-  public menuText: string = 'Close Menu';
 
   constructor(
     private router: Router,
@@ -84,16 +84,16 @@ export class NavBarComponent implements OnInit {
 
   openAcceptFriendRequestDialog(friendRequest) {
     this.dialog.open(AcceptFriendRequestDialog, {
-      height: '250px',
-      width: '350px',
+      height: '300px',
+      width: '450px',
       data: friendRequest
     });
   }
 
   openAcceptShareRequestDialog(shareRequest: ShareRequest) {
     this.dialog.open(AcceptShareRequestDialog, {
-      height: '250px',
-      width: '350px',
+      height: '300px',
+      width: '450px',
       data: shareRequest
     });
     return false;
@@ -101,21 +101,21 @@ export class NavBarComponent implements OnInit {
 
   openSendFriendRequestDialog() {
     this.dialog.open(SendFriendRequestDialog, {
-      height: '250px',
-      width: '350px',
+      height: '300px',
+      width: '450px',
+      data: {}
+    });
+  }
+
+  openEditUserDialog() {
+    this.dialog.open(UserEditDialog, {
+      height: '350px',
+      width: '450px',
       data: {}
     });
   }
 
   collapse() {
     this.sideNavService.sideNavOpenState.next(!this.sideNavOpenState);
-
-    if (this.sideNavOpenState) {
-      this.menuText = 'Close Menu';
-    }
-    else {
-      this.menuText = 'Open Menu';
-    }
-
   }
 }

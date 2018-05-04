@@ -1,11 +1,44 @@
-<clr-tree-node *ngFor="let category of rootCategories">
-  <clr-icon [attr.shape]="'folder'" *ngIf="!category.expanded" (click)="category.expanded = false"></clr-icon>
-  <clr-icon [attr.shape]="'folder-open'" *ngIf="category.expanded" (click)="category.expanded = true"></clr-icon>
-  <button class="node-button" (click)="showLinks(category);" [lg-ctx-menu]="menuItems" [target-item]="category"><span class="badge">{{category.linkCount}}</span> {{category.title}}</button>
-  <ng-template [(clrIfExpanded)]="category.expanded">
-      <sub-category [categoryId]="category.id" ></sub-category>
-  </ng-template>
+<clr-tree-node *ngIf="rootCategories.length > 0">
+    <button class="node-button" 
+      (click)="toggleRoot();" 
+      droppable 
+      [dropScope]="'category'" 
+      (onDrop)="onDrop($event, category)" 
+      [dragHintClass]="'dragHint'" 
+      [dragOverClass]="'dragOver'"
+      (contextmenu)="false"
+    >
+    <clr-icon [attr.shape]="'folder'" *ngIf="!rootExpanded"></clr-icon>
+    <clr-icon [attr.shape]="'folder-open'" *ngIf="rootExpanded"></clr-icon>
+    Root</button>
+    <ng-template [(clrIfExpanded)]="rootExpanded">
+      <clr-tree-node *ngFor="let category of rootCategories" >
+        <div class="node-button" 
+          (click)="showLinks(category);"
+          (keyup.enter)="showLinks(category);"
+          [lg-ctx-menu]="menuItems" 
+          [target-item]="category"
+          draggable [dragScope]="'category'"
+          droppable [dropScope]="['link','category']" 
+          [dragData]="category"
+          (onDrop)="onDrop($event, category)"  
+          [dragTransitClass]="'dragTransit'"
+          [dragHintClass]="'dragHint'" 
+          [dragOverClass]="'dragOver'"
+          [dragHandle]="'.drag-handle'"
+        >
+          <clr-icon class="drag-handle" [attr.shape]="'folder'" *ngIf="!category.expanded" (click)="category.expanded = false"></clr-icon>
+          <clr-icon class="drag-handle" [attr.shape]="'folder-open'" *ngIf="category.expanded" (click)="category.expanded = true"></clr-icon>
+          <span class="badge">{{category.linkCount}}</span> {{category.title}}
+        </div>
+        <ng-template [(clrIfExpanded)]="category.expanded">
+            <sub-category [categoryId]="category.id" ></sub-category>
+        </ng-template>
+      </clr-tree-node>
+    </ng-template>
+    
 </clr-tree-node>
+
 
 <div class="empty-state" *ngIf="rootCategories.length === 0">
   <label>(Empty)</label>

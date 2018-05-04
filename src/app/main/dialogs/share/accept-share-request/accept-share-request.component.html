@@ -1,10 +1,12 @@
 <div mat-dialog-title class="header">
   <mat-icon mat-list-icon>folder_shared</mat-icon> <span>Share Request</span>
 </div>
-<br />
 <mat-dialog-content>
-  <label>{{data.senderEmail}} would like to share {{data.title | uppercase}} with you.</label>
-  <br />
+  <label><strong>{{data.senderEmail}}</strong> would like to share <strong>{{data.title | uppercase}}</strong> with you.</label>
+  <div class="messageBlock" *ngIf="data.message !== ''">
+    <label><strong>Message:</strong></label><br />
+    <label>{{data.message}}</label>
+  </div>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-raised-button color="primary" (click)="acceptRequest();" >Accept</button>

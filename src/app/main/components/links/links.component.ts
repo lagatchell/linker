@@ -29,7 +29,7 @@ export class LinksComponent implements OnInit {
   addCategory() {
     this.dialog.open(AddCategoryDialog, {
       height: '300px',
-      width: '350px',
+      width: '450px',
       data: {
         'parentCategoryId': null
       }
@@ -45,8 +45,10 @@ export class LinksComponent implements OnInit {
     }
 
     if (elementWidth > 600) {
+      if (this.sideNavMode === 'over') {
+        this.sideNavService.sideNavOpenState.next(true);
+      }
       this.sideNavMode = 'side';
-      this.sideNavService.sideNavOpenState.next(true);
     }
 
   }

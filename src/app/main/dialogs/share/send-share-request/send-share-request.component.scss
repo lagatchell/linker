@@ -18,3 +18,7 @@ mat-form-field {
     padding: 0px;
     
 }
+
+textarea:focus {
+    box-shadow: unset !important;
+}

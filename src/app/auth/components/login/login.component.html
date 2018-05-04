@@ -11,15 +11,15 @@
       <mat-form-field>
         <input matInput placeholder="Email" id="email" [(ngModel)]="email" name="email" required #em="ngModel">
       </mat-form-field>
-      <div [hidden]="em.valid || em.pristine" class="alert alert-danger">
+      <div [hidden]="em.valid || !em.touched" class="alert alert-danger">
           Email is required
       </div>
       <br />
       <!-- Password -->
       <mat-form-field>
-          <input  matInput placeholder="Password" type="password" id="password" [(ngModel)]="password" name="password" required #pwd="ngModel">
+          <input  matInput placeholder="Password" type="password" id="password" [(ngModel)]="password" name="password" required #pwd="ngModel" (keyup.enter)="login();">
       </mat-form-field>
-      <div [hidden]="pwd.valid || pwd.pristine" class="alert alert-danger">
+      <div [hidden]="pwd.valid || !pwd.touched" class="alert alert-danger">
           Password required
       </div>
       <br />

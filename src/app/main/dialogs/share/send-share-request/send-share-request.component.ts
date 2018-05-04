@@ -13,6 +13,7 @@ export class SendShareRequestDialog implements OnInit {
 
   friends: any[] = [];
   selectedFriend: any;
+  messageText: string = '';
 
   constructor(
     public dialogRef: MatDialogRef<SendShareRequestDialog>,
@@ -41,6 +42,7 @@ export class SendShareRequestDialog implements OnInit {
         title: this.data.title,
         categoryId: this.data.id,
         receiverEmail: this.selectedFriend.email,
+        message: this.messageText
       });
       this.onNoClick();
     }

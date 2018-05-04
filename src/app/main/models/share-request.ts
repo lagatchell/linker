@@ -5,6 +5,7 @@ export class ShareRequest {
         public senderEmail: string,
         public receiverEmail: string,
         public title: string,
+        public message?: string,
         public id?: string
     ){}
 }

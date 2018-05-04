@@ -32,6 +32,7 @@ export class ShareService {
       title: shareRequest.title,
       senderEmail: this.authService.authUser.email,
       receiverEmail: shareRequest.receiverEmail,
+      message: shareRequest.message,
       id: newShareRequest.key
     }).then(() => {
       this.snackBar.open(`Request has been sent`, '', {
@@ -92,7 +93,6 @@ export class ShareService {
       });
     });
   }
-
 
   removeSharedCategory(categoryId, friendId) {
     this.afdb.database.ref(`${this.authService.authUser.uid}/sharedWithMe/categories/${friendId}`).once('value', (snapShot) => {

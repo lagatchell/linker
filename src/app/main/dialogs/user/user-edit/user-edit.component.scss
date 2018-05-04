@@ -1,3 +1,8 @@
+.error-message {
+    padding: 5px;
+    margin: 10px;
+}
+
 .header {
     font-family: nunito;
     color: #686868;
@@ -17,4 +22,14 @@ mat-form-field {
     margin: 0px;
     padding: 0px;
     
+}
+
+input[type=password] {
+    border: none;
+    background: transparent;
+}
+
+input[type=password]:not([readonly]):focus {
+    border: none;
+    background: transparent;
 }

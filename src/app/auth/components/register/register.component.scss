@@ -35,6 +35,16 @@ mat-card {
     margin: 10px;
 }
 
+input[type=password] {
+    border: none;
+    background: transparent;
+}
+
+input[type=password]:not([readonly]):focus {
+    border: none;
+    background: transparent;
+}
+
 @media screen and (max-width: 550px) {
     mat-card {
         width: 80%;

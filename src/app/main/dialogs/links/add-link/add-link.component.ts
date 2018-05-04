@@ -29,14 +29,16 @@ export class AddLinkDialog implements OnInit {
   }
 
   createLink() {
-    let newLink: LinkItem = new LinkItem(
-      this.linkUrl,
-      this.linkAlias,
-      this.linkDescription
-    );
-    
-    this.linkService.createLinkItem(this.data.categoryId, newLink);
-    this.onNoClick();
+    if (this.linkUrl !== null && this.linkUrl !== undefined && this.linkUrl !== '' && this.linkAlias !== null && this.linkAlias !== undefined && this.linkAlias !== '') {
+      let newLink: LinkItem = new LinkItem(
+        this.linkUrl,
+        this.linkAlias,
+        this.linkDescription
+      );
+      
+      this.linkService.createLinkItem(this.data.categoryId, newLink);
+      this.onNoClick();
+    }
   }
 }
 

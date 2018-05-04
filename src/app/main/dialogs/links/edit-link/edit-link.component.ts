@@ -34,8 +34,10 @@ export class EditLinkDialog implements OnInit {
   }
 
   saveLink() {
-    this.linkService.updateLinkItem(this.data.categoryId, this.data.id, this.linkAlias, this.linkDescription, this.linkUrl);
-    this.onNoClick();
+    if (this.linkUrl !== null && this.linkUrl !== undefined && this.linkUrl !== '' && this.linkAlias !== null && this.linkAlias !== undefined && this.linkAlias !== '') {
+      this.linkService.updateLinkItem(this.data.categoryId, this.data.id, this.linkAlias, this.linkDescription, this.linkUrl);
+      this.onNoClick();
+    }
   }
 
   copyToClipBoard() {

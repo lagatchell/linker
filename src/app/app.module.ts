@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -39,9 +40,10 @@ import { SendFriendRequestDialog } from './main/dialogs/friends/send-friend-requ
 import { AcceptFriendRequestDialog } from './main/dialogs/friends/accept-friend-request/accept-friend-request.component';
 import { SendShareRequestDialog } from './main/dialogs/share/send-share-request/send-share-request.component';
 import { AcceptShareRequestDialog } from './main/dialogs/share/accept-share-request/accept-share-request.component';
-import { MoveCategoryDialog } from './main/dialogs/categories/move-category/move-category.component';
-import { MoveLinkDialog } from './main/dialogs/links/move-link/move-link.component';
 import { SidenavService } from './main/services/sidenav.service';
+import { UserEditDialog } from './main/dialogs/user/user-edit/user-edit.component';
+import { UserService } from './main/services/user.service';
+import { CategoryCacheService } from './main/services/category-cache.service';
 
 @NgModule({
   declarations: [
@@ -63,8 +65,7 @@ import { SidenavService } from './main/services/sidenav.service';
     AcceptFriendRequestDialog,
     SendShareRequestDialog,
     AcceptShareRequestDialog,
-    MoveCategoryDialog,
-    MoveLinkDialog
+    UserEditDialog
   ],
   imports: [
     BrowserModule,
@@ -74,6 +75,7 @@ import { SidenavService } from './main/services/sidenav.service';
     AngularFireStorageModule,
     AngularFireAuthModule,
     FormsModule,
+    NgDragDropModule.forRoot(),
     MatDesignModule,
     ClarityModule,
     LgContextMenuModule,
@@ -89,8 +91,7 @@ import { SidenavService } from './main/services/sidenav.service';
     SendShareRequestDialog,
     AcceptFriendRequestDialog,
     SendFriendRequestDialog,
-    MoveCategoryDialog,
-    MoveLinkDialog
+    UserEditDialog
   ], 
   providers: [
     AuthService,
@@ -100,7 +101,9 @@ import { SidenavService } from './main/services/sidenav.service';
     FriendsService,
     NotificationService,
     ShareService,
-    SidenavService
+    SidenavService,
+    UserService,
+    CategoryCacheService
   ],
   bootstrap: [AppComponent]
 })

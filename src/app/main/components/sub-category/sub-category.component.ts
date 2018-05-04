@@ -4,11 +4,12 @@ import { LgMenuItem } from '../../../shared/modules/lg-context-menu/interfaces/l
 import { LinkService } from '../../../main/services/link.service';
 import { Category } from '../../models/category';
 import { AddCategoryDialog } from '../../dialogs/categories/add-category/add-category.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { CategoryService } from '../../services/category.service';
 import { EditCategoryDialog } from '../../dialogs/categories/edit-category/edit-category.component';
 import { SendShareRequestDialog } from '../../dialogs/share/send-share-request/send-share-request.component';
-import { MoveCategoryDialog } from '../../dialogs/categories/move-category/move-category.component';
+import { LinkItem } from '../../models/link-item';
+import { CategoryCacheService } from '../../services/category-cache.service';
 
 @Component({
   selector: 'sub-category',
@@ -28,7 +29,7 @@ export class SubCategoryComponent implements OnInit {
       action: (category: Category) => {
         this.dialog.open(AddCategoryDialog, {
           height: '300px',
-          width: '350px',
+          width: '450px',
           data: {
             'parentCategoryId': category.id
           }
@@ -41,18 +42,7 @@ export class SubCategoryComponent implements OnInit {
       action: (category: Category) => {
         this.dialog.open(SendShareRequestDialog, {
           height: '300px',
-          width: '350px',
-          data: category
-        });
-      }
-    },
-    {
-      name: 'Move',
-      icon: 'swap_vert',
-      action: (category: Category) => {
-        this.dialog.open(MoveCategoryDialog, {
-          height: '300px',
-          width: '350px',
+          width: '450px',
           data: category
         });
       }
@@ -63,7 +53,7 @@ export class SubCategoryComponent implements OnInit {
       action: (category: Category) => {
         this.dialog.open(EditCategoryDialog, {
           height: '300px',
-          width: '350px',
+          width: '450px',
           data: category
         });
       }
@@ -81,14 +71,21 @@ export class SubCategoryComponent implements OnInit {
     private subcategoryService: SubCategoryService,
     private categoryService: CategoryService,
     private linkService: LinkService,
-    private dialog: MatDialog
+    private categoryCacheService: CategoryCacheService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
     this.loading = true;
     this.subcategoryService.getSubCategoriesByParentId$(this.categoryId).subscribe((subCategories: Category[]) => {
-      this.subCategories = subCategories;
+      this.subCategories = subCategories.sort(function(a, b){
+        if(a.title.toLowerCase() < b.title.toLowerCase()) return -1;
+        if(a.title.toLowerCase() > b.title.toLowerCase()) return 1;
+        return 0;
+      })
       this.loading = false;
+      this.writeSubCategoryIdsToCache();
     });
   }
 
@@ -96,5 +93,42 @@ export class SubCategoryComponent implements OnInit {
     category.expanded = !category.expanded;
     this.linkService.friendId.next(null);
     this.linkService.category.next(category);
+  }
+
+  onDrop(event: any, receivingCatgory: Category = null) {
+    let droppedItem: any = event.dragData;
+
+    // Link was dropped
+    if (droppedItem.linkUrl !== undefined) {
+      if (droppedItem.categoryId !== receivingCatgory.id) {
+        this.linkService.moveLink(droppedItem, receivingCatgory.id);
+      }
+    }
+    // Category was dropped
+    else if (droppedItem.title !== undefined) {
+      if (receivingCatgory === null && droppedItem.parentCategoryId) {
+        this.categoryService.moveCategory(droppedItem.id, null);
+      }
+      else {
+        if (droppedItem.id !== receivingCatgory.id && droppedItem.parentCategoryId !== receivingCatgory.id) {
+          if (!this.categoryCacheService.isParentOfCategory(droppedItem.id, receivingCatgory.id)) {
+            this.categoryService.moveCategory(droppedItem.id, receivingCatgory.id);
+          }
+          else {
+            this.snackBar.open("Cannot move category into its' child", '', {
+              duration: 2000,
+            });
+          }
+        }
+      }
+    } 
+  }
+
+  writeSubCategoryIdsToCache() {
+    let subcategoryIds = this.subCategories.map((subcategory) => {
+      return subcategory.id;
+    });
+
+    this.categoryCacheService.storeCategoryStucture(this.categoryId, subcategoryIds);
   }
 }

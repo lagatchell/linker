@@ -7,7 +7,6 @@ import { LinkItem } from '../../models/link-item';
 import { LgMenuItem } from '../../../shared/modules/lg-context-menu/interfaces/lg-menu-item';
 import { EditLinkDialog } from '../../dialogs/links/edit-link/edit-link.component';
 import { of } from 'rxjs/observable/of';
-import { MoveLinkDialog } from '../../dialogs/links/move-link/move-link.component';
 
 @Component({
   selector: 'link-grid',
@@ -21,20 +20,6 @@ export class LinkGridComponent implements OnInit {
   isSharedFolder: boolean = false;
 
   linkMenuItems: LgMenuItem[] = [
-    {
-      name: 'Move',
-      icon: 'swap_vert',
-      action: (linkItem: LinkItem) => {
-        this.dialog.open(MoveLinkDialog, {
-          height: '250px',
-          width: '350px',
-          data: linkItem
-        });
-      },
-      hidden: () => {
-        return of(this.isSharedFolder);
-      }
-    },
     {
       name: 'Copy',
       icon: 'content_copy',
@@ -58,7 +43,7 @@ export class LinkGridComponent implements OnInit {
       action: (linkItem: LinkItem) => {
         this.dialog.open(EditLinkDialog, {
           height: '400px',
-          width: '350px',
+          width: '450px',
           data: linkItem
         });
       }
@@ -67,7 +52,7 @@ export class LinkGridComponent implements OnInit {
       name: 'Delete',
       icon: 'delete',
       action: (linkItem: LinkItem) => {
-        this.linkService.deleteLinkItem(this.category.id, linkItem.id);
+        this.linkService.deleteLinkItem(linkItem);
       }
     }
   ];
@@ -79,8 +64,10 @@ export class LinkGridComponent implements OnInit {
       action: () => {
         this.addLink();
       },
-      hidden: (category) => {
-        return of(this.isSharedFolder || category === null);
+      hidden: () => {
+        return this.linkService.category.map((category) => {
+          return this.isSharedFolder || category === null;
+        });
       }
     }
   ];
@@ -106,7 +93,9 @@ export class LinkGridComponent implements OnInit {
 
   getLinks() {
     this.linkService.getLinks$().subscribe((links: LinkItem[]) => {
-      this.links = links;
+      this.links = links.sort((a,b) => {
+        return (a.order < b.order)? -1 : 1;
+      })
     });
   }
 
@@ -128,5 +117,14 @@ export class LinkGridComponent implements OnInit {
         categoryId: this.category.id 
       }
     });
+  }
+
+  reorderLink(event: any, receivingLink: LinkItem) {
+
+    let link: LinkItem = event.dragData;
+
+    if (link.id !== receivingLink.id) {
+      this.linkService.updateLinkOrder(link, receivingLink);
+    }    
   }
 }

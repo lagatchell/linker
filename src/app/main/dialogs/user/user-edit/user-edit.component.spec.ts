@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MoveCategoryDialog } from './move-category.component';
+import { UserEditDialog } from './user-edit.component';
 
-describe('MoveCategoryDialog', () => {
-  let component: MoveCategoryDialog;
-  let fixture: ComponentFixture<MoveCategoryDialog>;
+describe('UserEditDialog', () => {
+  let component: UserEditDialog;
+  let fixture: ComponentFixture<UserEditDialog>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MoveCategoryDialog ]
+      declarations: [ UserEditDialog ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MoveCategoryDialog);
+    fixture = TestBed.createComponent(UserEditDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

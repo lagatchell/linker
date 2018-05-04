@@ -1,7 +1,8 @@
 <mat-toolbar class="toolbar-container"  color="primary">
   <mat-toolbar-row class="toolbar">
-        <button mat-icon-button  matTooltip="{{menuText}}" (click)="collapse();" *ngIf="user">
-          <mat-icon>menu</mat-icon>
+        <button mat-icon-button (click)="collapse();" *ngIf="user">
+          <mat-icon *ngIf="!sideNavOpenState">menu</mat-icon>
+          <mat-icon *ngIf="sideNavOpenState">arrow_back</mat-icon>
         </button>
         <span class="toolbar-spacer"></span>
         <div>
@@ -37,10 +38,10 @@
             <mat-icon mat-list-icon>account_circle</mat-icon>
           </button>
           <mat-menu #userMenu="matMenu">
-            <div mat-menu-item disabled >
-              <mat-icon>person</mat-icon>
+            <button mat-menu-item (click)="openEditUserDialog();">
+              <mat-icon>account_circle</mat-icon>
               {{user.email}}
-            </div>
+            </button>
             <mat-divider></mat-divider>
             <button mat-menu-item (click)="openSendFriendRequestDialog();">
               <mat-icon>people</mat-icon>

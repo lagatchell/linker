@@ -35,7 +35,11 @@ export class SharedCategoriesComponent implements OnInit {
 
   getSharedCategories() {
     this.shareService.getSharedCatgoriesByOwnerId$(this.friendId).subscribe((categories: Category[]) => {
-      this.sharedCategories = categories;
+      this.sharedCategories = categories.sort(function(a, b){
+        if(a.title.toLowerCase() < b.title.toLowerCase()) return -1;
+        if(a.title.toLowerCase() > b.title.toLowerCase()) return 1;
+        return 0;
+      })
     });
   }
 

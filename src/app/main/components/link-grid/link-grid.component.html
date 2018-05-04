@@ -10,8 +10,21 @@
         </button>
     </mat-toolbar-row>
   </mat-toolbar>
-  <div class="link-container" [lg-ctx-menu]="menuItems" [target-item]="category">
-    <mat-card *ngFor="let linkItem of links" class="category-card" matTooltip="{{linkItem.linkUrl}}" (click)="openLink(linkItem.linkUrl);" [lg-ctx-menu]="linkMenuItems" [target-item]="linkItem">
+  <div class="link-container" [lg-ctx-menu]="menuItems">
+    <mat-card *ngFor="let linkItem of links; let i = index;" 
+              class="category-card" 
+              matTooltip="{{linkItem.linkUrl}}" 
+              (click)="openLink(linkItem.linkUrl);" 
+              [lg-ctx-menu]="linkMenuItems" 
+              [target-item]="linkItem"
+              draggable [dragScope]="'link'"
+              droppable [dropScope]="'link'"
+              [dragData]="linkItem"
+              (onDrop)="reorderLink($event, linkItem);"
+              [dragTransitClass]="'dragTransit'"
+              [dragHintClass]="'dragHint'" 
+              [dragOverClass]="'dragOver'"
+              >
       <mat-card-title>
           <label class="clickable"><img class="link-favicon" src="https://plus.google.com/_/favicon?domain_url={{linkItem.linkUrl}}" alt="favicon" /> {{ (linkItem.alias.length>45)? (linkItem.alias | slice:0:45)+'...':(linkItem.alias) }}</label>
       </mat-card-title>
@@ -20,6 +33,7 @@
             {{ (linkItem.shortDescription.length>(30 - linkItem.alias.length))?(linkItem.shortDescription | slice:0:(30 - linkItem.alias.length))+'...':(linkItem.shortDescription)}}
           </p>
       </mat-card-content>
+      <div class="dragOverlay">{{i + 1}}</div>
     </mat-card>
     <div class="empty-state" *ngIf="links.length === 0">
         <mat-icon>not_interested</mat-icon>

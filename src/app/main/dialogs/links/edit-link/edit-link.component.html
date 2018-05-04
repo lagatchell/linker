@@ -1,5 +1,5 @@
 <div mat-dialog-title class="header">
-  <mat-icon mat-list-icon>mode_edit</mat-icon> <span>Edit Link</span>
+  <mat-icon mat-list-icon>mode_edit</mat-icon> <span>{{data.alias}}</span>
 </div>
 <br />
 <mat-dialog-content>
@@ -8,7 +8,7 @@
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <input #linkurl matInput placeholder="Link Url" [(ngModel)]="linkUrl" >
-    <span matSuffix class="clickable" (click)="copyToClipBoard();" matTooltip="Copy to Clipboard" ><mat-icon>content_copy</mat-icon></span>
+    <span matSuffix class="clipboard-icon" (click)="copyToClipBoard();" matTooltip="Copy to Clipboard" ><clr-icon shape="copy-to-clipboard"></clr-icon></span>
   </mat-form-field>
   <mat-form-field class="example-full-width">
     <textarea matInput placeholder="Link Description" [(ngModel)]="linkDescription"></textarea>

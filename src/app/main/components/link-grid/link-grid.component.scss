@@ -73,3 +73,38 @@ mat-card {
     height: 50px;
     width: 50px;
 }
+
+.dragTransit {
+    border: 2px dashed rgba(63, 81, 181, 1);
+}
+
+.dragHint {
+    border: 2px dashed rgba(63, 81, 181, 0.5);
+
+    .dragOverlay {
+        display: block;
+    }
+}
+
+.dragOver {
+    border: 2px solid #ff4081;
+
+    .dragOverlay {
+        color: #ff4081;
+    }
+}
+
+.dragOverlay {
+    display: none;
+    position: absolute;
+    bottom: 5px;
+    z-index: 100;
+    font-size: 25px;
+}
+
+@media only screen and (max-width: 540px) {
+    .category-card {
+        width: 100%;
+    }
+}
+
