@@ -8,6 +8,7 @@ import {
 
 import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase } from 'angularfire2/database';
+import * as firebase from 'firebase/app';
 
 import { AngularFireAuth } from 'angularfire2/auth';
 
@@ -54,18 +55,28 @@ export class AuthService implements CanActivate {
 
   register(email: string, password: string) {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-    .then(() => {
-        let dbRef = this.afdb.database.ref('users');
-        let newUser = dbRef.push();
-        newUser.set ({
-            email: email,
-            id: newUser.key,
-        });
+    .then((user) => {
+        this.addUser(user.email, user.uid);
+    });
+  }
+
+  addUser(email, userId) {
+    this.afdb.database.ref(`users/${userId}`).set({
+        email: email,
+        id: userId
     });
   }
 
   login(loginEmail: string, loginPassword: string) {
     return this.afAuth.auth.signInWithEmailAndPassword(loginEmail, loginPassword);
+  }
+
+  signInwithGoogle() {
+    let provider = new firebase.auth.GoogleAuthProvider();
+    return this.afAuth.auth.signInWithPopup(provider).then((result) => {
+        let user = result.user;
+        this.addUser(user.email, user.uid);
+    });
   }
 
   logout() {

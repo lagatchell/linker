@@ -44,6 +44,7 @@ import { SidenavService } from './main/services/sidenav.service';
 import { UserEditDialog } from './main/dialogs/user/user-edit/user-edit.component';
 import { UserService } from './main/services/user.service';
 import { CategoryCacheService } from './main/services/category-cache.service';
+import { LinkViewService } from './main/services/link-view.service';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { CategoryCacheService } from './main/services/category-cache.service';
     ShareService,
     SidenavService,
     UserService,
-    CategoryCacheService
+    CategoryCacheService,
+    LinkViewService
   ],
   bootstrap: [AppComponent]
 })

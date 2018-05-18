@@ -14,10 +14,11 @@
       [dragScope]="'category'"
       [dragData]="category"
       [dragHandle]="'.drag-handle'"
+      [ngClass]="{ 'selected': (selectedCategory | async)?.id === category.id }"
       >
         <clr-icon class="drag-handle" [attr.shape]="'folder'" *ngIf="!category.expanded" (click)="category.expanded = false"></clr-icon>
         <clr-icon class="drag-handle" [attr.shape]="'folder-open'" *ngIf="category.expanded" (click)="category.expanded = true"></clr-icon>
-        <span class="badge">{{category.linkCount}}</span> {{category.title}}
+        {{category.title}}
       </div>
     <ng-template [(clrIfExpanded)]="category.expanded">
         <sub-category [categoryId]="category.id" ></sub-category>

@@ -1,8 +1,14 @@
 <ng-container [clrLoading]="loading">
   <clr-tree-node *ngFor="let category of sharedSubCategories">
+    <button class="node-button" 
+            (click)="showLinks(category);" 
+            [lg-ctx-menu]="menuItems" 
+            [target-item]="category"
+            [ngClass]="{ 'selected': (selectedCategory | async)?.id === category.id }"
+    >
     <clr-icon [attr.shape]="'folder'" *ngIf="!category.expanded" (click)="category.expanded = false"></clr-icon>
     <clr-icon [attr.shape]="'folder-open'" *ngIf="category.expanded" (click)="category.expanded = true"></clr-icon>
-    <button class="node-button" (click)="showLinks(category);" [lg-ctx-menu]="menuItems" [target-item]="category"><span class="badge">{{category.linkCount}}</span> {{category.title}}</button>
+    {{category.title}}</button>
     <ng-template [(clrIfExpanded)]="category.expanded">
         <shared-sub-categories [categoryId]="category.id" [friendId]="friendId" ></shared-sub-categories>
     </ng-template>

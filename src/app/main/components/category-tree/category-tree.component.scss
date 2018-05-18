@@ -8,12 +8,8 @@
     cursor: pointer;
 }
 
-.node-button:hover {
-    background-color: rgba(63, 81, 181, 0.1); //#f5f5f5;
-}
-
-.node-button:focus {
-    background-color: rgba(63, 81, 181, 0.1);
+.node-button:not(.selected):hover {
+    background-color: rgba(0, 96, 100, 0.1);
 }
 
 .empty-state {
@@ -27,14 +23,18 @@
 }
 
 .dragTransit {
-    border: 2px dashed rgba(63, 81, 181, 1);
+    border: 2px dashed rgba(0, 96, 100, 1);
 }
 
 .dragHint {
-    border: 2px dashed rgba(63, 81, 181, 0.5);
+    border: 2px dashed rgba(0, 96, 100, 0.5);
 }
 
 .dragOver {
-    border: 2px solid #ff4081;
+    border: 2px solid #880e4f;
 }
 
+.selected {
+    background-color: rgba(0, 96, 100, 1);
+    color: #fff;
+}

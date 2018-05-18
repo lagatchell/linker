@@ -5,11 +5,18 @@ import { AuthService } from '../../auth/services/auth.service';
 import { Category } from '../models/category';
 import { MatSnackBar } from '@angular/material';
 import { LinkService } from './link.service';
+import { filter } from 'rxjs/operator/filter';
+import { map } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+import { combineLatest } from 'rxjs/operators/combineLatest';
 
 @Injectable()
 export class CategoryService {
 
   category: Category = null;
+  searchTerm: BehaviorSubject<string> = new BehaviorSubject('');
   
   constructor(
     private snackBar: MatSnackBar,
@@ -23,15 +30,32 @@ export class CategoryService {
   }
 
   getRootCategories$() {
-    return this.afdb.list<Category>(`${this.authService.authUser.uid}/categories`).valueChanges().map((categories: Category[]) => {
-      return categories.filter((category: Category) => {
-        return (category.parentCategoryId === undefined) || (category.parentCategoryId == null);
-      })
+    return Observable.combineLatest(this.getAllCategories$(), this.searchTerm).map(([categories, searchTerm]) => {
+      return {
+        categories: categories,
+        searchTerm: searchTerm
+      };
+    })
+    .switchMap((query) => {
+      if (query.searchTerm !== '') {
+        return of(query.categories.filter((category: Category) => {
+          return category.title.toLowerCase().indexOf(query.searchTerm.toLowerCase()) !== -1;
+        }));
+      }
+      else {
+        return of(query.categories.filter((category: Category) => {
+          return (category.parentCategoryId === undefined) || (category.parentCategoryId == null);
+        }));
+      }
     });
   }
 
   getAllCategories$() {
     return this.afdb.list<Category>(`${this.authService.authUser.uid}/categories`).valueChanges();
+  }
+
+  getCategoryById$(categoryId) {
+    return this.afdb.object<Category>(`${this.authService.authUser.uid}/categories/${categoryId}`).valueChanges();
   }
 
   createLinkCategory(category: Category, parentCategoryId?) {
@@ -40,7 +64,6 @@ export class CategoryService {
     newCategory.set ({
         title: category.title,
         id: newCategory.key,
-        linkCount: 0,
         parentCategoryId: (parentCategoryId !== undefined && parentCategoryId !== null)? parentCategoryId : null
     });
   }

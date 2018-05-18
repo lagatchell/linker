@@ -49,6 +49,11 @@ input[type=password]:not([readonly]):focus {
     background: transparent;
 }
 
+.link-favicon {
+    width: 18px;
+    height: 18px;
+}
+
 @media screen and (max-width: 550px) {
     mat-card {
         width: 80%;

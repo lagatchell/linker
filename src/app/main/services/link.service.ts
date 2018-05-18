@@ -15,6 +15,7 @@ import { of } from 'rxjs/observable/of';
 @Injectable()
 export class LinkService {
 
+  public searchTerm: BehaviorSubject<string> = new BehaviorSubject('');
   public category: BehaviorSubject<Category> = new BehaviorSubject(null);
   public friendId: Subject<string> = new Subject();
 
@@ -25,15 +26,25 @@ export class LinkService {
   ) { }
 
   getLinks$() {
-    return Observable.combineLatest(this.category, this.friendId).map(([category, friendId]) => {
+    return Observable.combineLatest(this.category, this.friendId, this.searchTerm).map(([category, friendId, searchTerm]) => {
       return {
         userId: (friendId !== null)? friendId: this.authService.authUser.uid,
-        categoryId: (category !== null) ? category.id : null
+        categoryId: (category !== null) ? category.id : null,
+        searchTerm: searchTerm
       };
     })
-    .switchMap((link) => {
-      if (link.categoryId !== null) {
-        return this.afdb.list<LinkItem>(`${link.userId}/links/${link.categoryId}`).valueChanges(); 
+    .switchMap((query) => {
+      if (query.categoryId !== null) {
+        if (query.searchTerm !== '') {
+          return this.afdb.list<LinkItem>(`${query.userId}/links/${query.categoryId}`).valueChanges().map((links: LinkItem[]) => {
+            return links.filter((link: LinkItem) => {
+              return link.alias.toLowerCase().indexOf(query.searchTerm.toLowerCase()) !== -1;
+            })
+          });
+        }
+        else {
+          return this.afdb.list<LinkItem>(`${query.userId}/links/${query.categoryId}`).valueChanges(); 
+        }
       }
       else {
         return of([]);
@@ -59,16 +70,6 @@ export class LinkService {
               duration: 2000,
           });
         });
-
-      let categoryRef = this.afdb.database.ref(`${this.authService.authUser.uid}/categories`).child(categoryId);
-
-      categoryRef.once('value', (category) => {
-        categoryRef.update({
-          linkCount: (parseInt(category.val().linkCount) + 1)
-        }).catch((error) => {
-          console.log(error);
-        });
-      });
     });
     
   }
@@ -93,21 +94,6 @@ export class LinkService {
     this.afdb.list(`${this.authService.authUser.uid}/links/${linkItem.categoryId}/${linkItem.id}`).remove();
 
     this.linkDeleteReorder(linkItem);
-
-    let categoryRef = this.afdb.database.ref(`${this.authService.authUser.uid}/categories`).child(linkItem.categoryId);
-
-    categoryRef.once('value', (category) => {
-      categoryRef.update({
-        linkCount: (parseInt(category.val().linkCount) - 1)
-      }).then(() => {
-        this.snackBar.open(`Delete Successful`, '', {
-          duration: 2000,
-      });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    });
   }
 
   moveLink(linkItem: LinkItem, categoryId: string) {
@@ -120,27 +106,6 @@ export class LinkService {
           categoryId: categoryId
       })
       .then(() => {
-        let oldCategoryRef = this.afdb.database.ref(`${this.authService.authUser.uid}/categories`).child(linkItem.categoryId);
-        let newCategoryRef = this.afdb.database.ref(`${this.authService.authUser.uid}/categories`).child(categoryId);
-        
-        // Add 1 to the linkcount of the new category
-        newCategoryRef.once('value', (category) => {
-          newCategoryRef.update({
-            linkCount: (parseInt(category.val().linkCount) + 1)
-          }).catch((error) => {
-            console.log(error);
-          });
-        });
-
-        // Subtract 1 from the linkcount of the old category
-        oldCategoryRef.once('value', (category) => {
-          oldCategoryRef.update({
-            linkCount: (parseInt(category.val().linkCount) - 1)
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-        });
 
         // Update the links order to be the last link in the new category
         this.afdb.database.ref(`${this.authService.authUser.uid}/links/${categoryId}`).once('value', (links)=> {

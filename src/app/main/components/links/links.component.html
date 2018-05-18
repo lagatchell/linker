@@ -5,7 +5,20 @@
             <mat-toolbar-row class="toolbar">
                 <span>My Categories</span>
                 <span class="toolbar-spacer"></span>
+                <button mat-icon-button (click)="toggleSearch();" matTooltip="Search" >
+                    <mat-icon *ngIf="!showSearch">search</mat-icon>
+                    <mat-icon *ngIf="showSearch" color="primary">search</mat-icon>
+                </button>
                 <button mat-icon-button (click)="addCategory();" matTooltip="Add Category" ><mat-icon>create_new_folder</mat-icon></button>
+            </mat-toolbar-row>
+            <mat-toolbar-row class="searchBar" *ngIf="showSearch">
+                <!-- <span><mat-icon>search</mat-icon></span> -->
+                <mat-form-field class="full-width">       
+                    <input matInput id="categorySearch" placeholder="Title" [(ngModel)]="searchTerm" (keyup.enter)="performSearch();">
+                    <button mat-button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch();">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
             </mat-toolbar-row>
         </mat-toolbar>
         <div class="tree-container">

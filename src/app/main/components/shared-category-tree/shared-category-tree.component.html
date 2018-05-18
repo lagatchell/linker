@@ -1,7 +1,13 @@
 <clr-tree-node *ngFor="let friend of friends">
+  <button class="node-button" 
+          (click)="expand(friend);" 
+          [lg-ctx-menu]="menuItems" 
+          [target-item]="friend"
+  >
   <clr-icon [attr.shape]="'folder'" *ngIf="!friend.expanded" (click)="friend.expanded = false"></clr-icon>
   <clr-icon [attr.shape]="'folder-open'" *ngIf="friend.expanded" (click)="friend.expanded = true"></clr-icon>
-  <button class="node-button" (click)="expand(friend);" [lg-ctx-menu]="menuItems" [target-item]="friend">{{friend.email}}</button>
+  {{friend.email}}
+  </button>
   <ng-template [(clrIfExpanded)]="friend.expanded">
       <shared-categories [friendId]="friend.userId" ></shared-categories>
   </ng-template>

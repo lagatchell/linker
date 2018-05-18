@@ -9,6 +9,7 @@ import { EditCategoryDialog } from '../../dialogs/categories/edit-category/edit-
 import { SendShareRequestDialog } from '../../dialogs/share/send-share-request/send-share-request.component';
 import { LinkItem } from '../../models/link-item';
 import { CategoryCacheService } from '../../services/category-cache.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'category-tree',
@@ -65,6 +66,7 @@ export class CategoryTreeComponent implements OnInit {
     }
     
   ];
+  selectedCategory: BehaviorSubject<Category>;
 
   constructor(
     private categoryService: CategoryService,
@@ -76,6 +78,7 @@ export class CategoryTreeComponent implements OnInit {
 
   ngOnInit() {
     this.getCategories();
+    this.selectedCategory = this.linkService.category;
   }
 
   getCategories() {

@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import { LinkService } from '../../../main/services/link.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar, MatFormField, MatInput, MatTableDataSource, MatPaginator } from '@angular/material';
 import { AddLinkDialog } from '../../dialogs/links/add-link/add-link.component';
 import { Category } from '../../models/category';
 import { LinkItem } from '../../models/link-item';
 import { LgMenuItem } from '../../../shared/modules/lg-context-menu/interfaces/lg-menu-item';
 import { EditLinkDialog } from '../../dialogs/links/edit-link/edit-link.component';
 import { of } from 'rxjs/observable/of';
+import { LinkViewService } from '../../services/link-view.service';
+import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operator/map';
 
 @Component({
   selector: 'link-grid',
@@ -14,27 +17,28 @@ import { of } from 'rxjs/observable/of';
   styleUrls: ['./link-grid.component.scss']
 })
 export class LinkGridComponent implements OnInit {
-
+  windowWidth: number;
   links: LinkItem[] = [];
   category: Category = null;
   isSharedFolder: boolean = false;
+  searchTerm: string = '';
+  showSearch: boolean = false;
+  showSearchMobile: boolean = false;
+
+  @ViewChild('linkurl') linkurl: ElementRef;
+
+  listView: boolean = true;
+  displayedColumns = ['index', 'icon', 'alias', 'linkUrl', 'shortDescription'];
+  dataSource: MatTableDataSource<LinkItem>;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   linkMenuItems: LgMenuItem[] = [
     {
       name: 'Copy',
       icon: 'content_copy',
       action: (linkItem: LinkItem) => {
-
-        let linkCopy: LinkItem = {
-          alias: linkItem.alias + '-COPY',
-          linkUrl: linkItem.linkUrl,
-          shortDescription: linkItem.shortDescription
-        };
-
-        this.linkService.createLinkItem(this.category.id, linkCopy);
-      },
-      hidden: () => {
-        return of(this.isSharedFolder);
+        this.copyToClipBoard(linkItem);
       }
     },
     {
@@ -46,6 +50,9 @@ export class LinkGridComponent implements OnInit {
           width: '450px',
           data: linkItem
         });
+      },
+      hidden: () => {
+        return of(this.isSharedFolder);
       }
     },
     {
@@ -53,6 +60,9 @@ export class LinkGridComponent implements OnInit {
       icon: 'delete',
       action: (linkItem: LinkItem) => {
         this.linkService.deleteLinkItem(linkItem);
+      },
+      hidden: () => {
+        return of(this.isSharedFolder);
       }
     }
   ];
@@ -74,7 +84,9 @@ export class LinkGridComponent implements OnInit {
 
   constructor(
     private linkService: LinkService,
+    private linkViewService: LinkViewService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -89,13 +101,42 @@ export class LinkGridComponent implements OnInit {
         this.isSharedFolder = false;
       }
     });
+
+    this.linkViewService.getLinkView().subscribe((isListView) => {
+      if (isListView === null) {
+        this.listView = false;
+      }
+      else {
+        this.listView = isListView;
+      }
+
+      if (this.listView) {
+        setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
+        });
+      }
+    });
+
+    this.onResize({
+      target: window
+    });
   }
 
   getLinks() {
+    this.dataSource = new MatTableDataSource([]);
     this.linkService.getLinks$().subscribe((links: LinkItem[]) => {
       this.links = links.sort((a,b) => {
         return (a.order < b.order)? -1 : 1;
-      })
+      });
+
+      this.dataSource.data = this.links;
+      
+      if (this.listView) {
+        setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
+        });
+      }
+      
     });
   }
 
@@ -112,7 +153,7 @@ export class LinkGridComponent implements OnInit {
   addLink() {
     this.dialog.open(AddLinkDialog, {
       height: '400px',
-      width: '350px',
+      width: '450px',
       data: {
         categoryId: this.category.id 
       }
@@ -126,5 +167,79 @@ export class LinkGridComponent implements OnInit {
     if (link.id !== receivingLink.id) {
       this.linkService.updateLinkOrder(link, receivingLink);
     }    
+  }
+
+  toggleSearch() {
+    if (this.windowWidth <= 600) {
+      this.showSearchMobile = !this.showSearchMobile;
+
+      if (this.showSearchMobile) {
+        setTimeout(() => {
+          let searchMobile = document.getElementById('linkSearchMobile');
+          searchMobile.focus();
+        });
+      }
+    }
+
+    if (this.windowWidth > 600) {
+      this.showSearch = !this.showSearch;
+
+      if (this.showSearch) {
+        setTimeout(() => {
+          let search = document.getElementById('linkSearch');
+          search.focus();
+        });
+      }
+    }
+
+    if (!this.showSearch && !this.showSearchMobile) {
+      this.clearSearch();
+    }
+  }
+
+  performSearch() {
+    this.linkService.searchTerm.next(this.searchTerm);
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.linkService.searchTerm.next('');
+  }
+
+  onResize(event) {
+    this.windowWidth = event.target.innerWidth;
+
+    if (this.windowWidth <= 600) {
+        if (this.showSearch) {
+          this.showSearch = false;
+          this.showSearchMobile = true;
+        }
+    }
+
+    if (this.windowWidth > 600) {
+      if (this.showSearchMobile) {
+        this.showSearch = true;
+        this.showSearchMobile = false;
+      }
+    }
+
+  }
+
+  copyToClipBoard(link: LinkItem) {
+    this.linkurl.nativeElement.value = link.linkUrl;
+    this.linkurl.nativeElement.click();
+  }
+
+  copy() {
+    this.linkurl.nativeElement.select();
+    document.execCommand('Copy');
+    
+    this.snackBar.open('Copied to Clipboard', '', {
+      duration: 2000,
+    });
+  }
+
+  changeView() {
+    this.linkViewService.setLinkView(!this.listView);
   }
 }

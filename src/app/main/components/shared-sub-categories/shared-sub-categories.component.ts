@@ -3,6 +3,7 @@ import { ShareService } from '../../services/share.service';
 import { Category } from '../../models/category';
 import { LinkService } from '../../services/link.service';
 import { LgMenuItem } from '../../../shared/modules/lg-context-menu/interfaces/lg-menu-item';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'shared-sub-categories',
@@ -13,7 +14,7 @@ export class SharedSubCategoriesComponent implements OnInit {
 
   @Input() categoryId: string;
   @Input() friendId: string;
-
+  selectedCategory: BehaviorSubject<Category>;
   sharedSubCategories: Category[] = [];
 
   menuItems: LgMenuItem[] = [
@@ -26,6 +27,7 @@ export class SharedSubCategoriesComponent implements OnInit {
 
   ngOnInit() {
     this.getSharedSubCategories();
+    this.selectedCategory = this.linkService.category;
   }
 
   getSharedSubCategories() {

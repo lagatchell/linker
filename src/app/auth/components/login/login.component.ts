@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { UserService } from '../../../main/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
   loginErrorMessage: string = '';
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
   ) { }
 
@@ -29,6 +30,15 @@ export class LoginComponent implements OnInit {
         this.loginErrorMessage = error;
       });
     }
+  }
+
+  signInWithGoogle() {
+    this.authService.signInwithGoogle().then(() => {
+      this.router.navigate(['/']);
+    })
+    .catch((error) => {
+      this.loginErrorMessage = error;
+    });
   }
 
   signup(){

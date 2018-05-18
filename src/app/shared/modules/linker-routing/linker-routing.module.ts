@@ -14,7 +14,7 @@ import { AuthService } from '../../../auth/services/auth.service';
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: '', component: LinksComponent, canActivate: [AuthService]},
-      { path: '**', component: LinksComponent, canActivate: [AuthService]},
+      { path: '**', redirectTo: '', canActivate: [AuthService]},
     ])
   ],
   exports: [

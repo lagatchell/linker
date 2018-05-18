@@ -10,6 +10,7 @@ import { EditCategoryDialog } from '../../dialogs/categories/edit-category/edit-
 import { SendShareRequestDialog } from '../../dialogs/share/send-share-request/send-share-request.component';
 import { LinkItem } from '../../models/link-item';
 import { CategoryCacheService } from '../../services/category-cache.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'sub-category',
@@ -21,7 +22,7 @@ export class SubCategoryComponent implements OnInit {
   @Input() categoryId: string; 
   loading: boolean;
   subCategories: Category[] = [];
-
+  selectedCategory: BehaviorSubject<Category>;
   menuItems: LgMenuItem[] = [
     {
       name: 'Add sub-category',
@@ -78,6 +79,7 @@ export class SubCategoryComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+    this.selectedCategory = this.linkService.category;
     this.subcategoryService.getSubCategoriesByParentId$(this.categoryId).subscribe((subCategories: Category[]) => {
       this.subCategories = subCategories.sort(function(a, b){
         if(a.title.toLowerCase() < b.title.toLowerCase()) return -1;

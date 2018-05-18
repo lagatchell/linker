@@ -1,43 +1,135 @@
-<div class="flex-container">
+<div class="flex-container" (window:resize)="onResize($event)">
   <mat-toolbar class="toolbar-container">
     <mat-toolbar-row class="toolbar">
         <div>
           <label>{{(category)? category.title : ''}}</label>
         </div>
         <span class="toolbar-spacer"></span>
-        <button mat-raised-button (click)="addLink();" color="primary" *ngIf="category && !isSharedFolder" matTooltip="Add Link">
-          <mat-icon mat-list-icon>link</mat-icon>+
+        <div class="search-container" *ngIf="category">
+          <button mat-icon-button matTooltip="Search" (click)="toggleSearch();" >
+            <mat-icon *ngIf="!showSearch && !showSearchMobile">search</mat-icon>
+            <mat-icon *ngIf="showSearch || showSearchMobile" color="primary">search</mat-icon>
+            </button>
+          <div [hidden]="!showSearch" class="searchBar">
+            <mat-form-field >       
+              <input matInput id="linkSearch" placeholder="Alias" [(ngModel)]="searchTerm" (keyup.enter)="performSearch();">
+              <button mat-button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch();">
+                  <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+        </div>
+        <button mat-icon-button (click)="changeView()" *ngIf="category">
+          <mat-icon *ngIf="listView" matTooltip="Card View">view_module</mat-icon>
+          <mat-icon *ngIf="!listView" matTooltip="List View">view_list</mat-icon>
         </button>
+        <span role="tooltip" aria-haspopup="true" class="tooltip tooltip-xs tooltip-bottom-left">
+          <button mat-icon-button class="addLink" (click)="addLink();" *ngIf="category && !isSharedFolder">
+            <mat-icon>link</mat-icon>+
+          </button>
+          <span class="tooltip-content">Add Link</span>
+        </span>
+    </mat-toolbar-row>
+    <mat-toolbar-row [hidden]="!showSearchMobile" class="searchBar">
+      <mat-form-field>       
+        <input matInput id="linkSearchMobile" placeholder="Alias" [(ngModel)]="searchTerm" (keyup.enter)="performSearch();">
+        <button mat-button *ngIf="searchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearSearch();">
+            <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
     </mat-toolbar-row>
   </mat-toolbar>
   <div class="link-container" [lg-ctx-menu]="menuItems">
-    <mat-card *ngFor="let linkItem of links; let i = index;" 
-              class="category-card" 
-              matTooltip="{{linkItem.linkUrl}}" 
-              (click)="openLink(linkItem.linkUrl);" 
-              [lg-ctx-menu]="linkMenuItems" 
-              [target-item]="linkItem"
-              draggable [dragScope]="'link'"
-              droppable [dropScope]="'link'"
-              [dragData]="linkItem"
-              (onDrop)="reorderLink($event, linkItem);"
-              [dragTransitClass]="'dragTransit'"
-              [dragHintClass]="'dragHint'" 
-              [dragOverClass]="'dragOver'"
-              >
-      <mat-card-title>
-          <label class="clickable"><img class="link-favicon" src="https://plus.google.com/_/favicon?domain_url={{linkItem.linkUrl}}" alt="favicon" /> {{ (linkItem.alias.length>45)? (linkItem.alias | slice:0:45)+'...':(linkItem.alias) }}</label>
-      </mat-card-title>
-      <mat-card-content>
-          <p *ngIf="linkItem.alias.length<30 && linkItem.shortDescription !== ''" >
-            {{ (linkItem.shortDescription.length>(30 - linkItem.alias.length))?(linkItem.shortDescription | slice:0:(30 - linkItem.alias.length))+'...':(linkItem.shortDescription)}}
-          </p>
-      </mat-card-content>
-      <div class="dragOverlay">{{i + 1}}</div>
-    </mat-card>
+
+    <!-- Card View -->
+    <div class="cardView" *ngIf="!listView && links.length > 0">
+      <mat-card *ngFor="let linkItem of links; let i = index;" 
+        class="category-card" 
+        matTooltip="{{linkItem.linkUrl}}" 
+        (click)="openLink(linkItem.linkUrl);" 
+        [lg-ctx-menu]="linkMenuItems" 
+        [target-item]="linkItem"
+        draggable [dragScope]="'link'"
+        droppable [dropScope]="'link'"
+        [dragData]="linkItem"
+        (onDrop)="reorderLink($event, linkItem);"
+        [dragTransitClass]="'dragTransit'"
+        [dragHintClass]="'dragHint'" 
+        [dragOverClass]="'dragOver'"
+      >
+        <mat-card-title>
+            <label class="clickable"><img class="link-favicon" src="https://plus.google.com/_/favicon?domain_url={{linkItem.linkUrl}}" alt="favicon" /> {{ (linkItem.alias.length>45)? (linkItem.alias | slice:0:45)+'...':(linkItem.alias) }}</label>
+        </mat-card-title>
+        <mat-card-content>
+            <p *ngIf="linkItem.alias.length<30 && linkItem.shortDescription !== ''" >
+              {{ (linkItem.shortDescription.length>(30 - linkItem.alias.length))?(linkItem.shortDescription | slice:0:(30 - linkItem.alias.length))+'...':(linkItem.shortDescription)}}
+            </p>
+        </mat-card-content>
+        <div class="dragOverlay">{{i + 1}}</div>
+      </mat-card>
+    </div>
+    
+    <!-- List View -->
+    <div class="listView" *ngIf="listView && links.length > 0">
+      <div class="table-card">
+          <mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="index">
+              <mat-header-cell class="index-cell" *matHeaderCellDef></mat-header-cell>
+              <mat-cell class="index-cell" *matCellDef="let i = index"><div class="dragOverlayTable">{{i + 1}}</div></mat-cell>
+            </ng-container>
+  
+            <ng-container matColumnDef="icon">
+              <mat-header-cell class="icon-cell" *matHeaderCellDef></mat-header-cell>
+              <mat-cell class="icon-cell" *matCellDef="let link"><img class="link-favicon" src="https://plus.google.com/_/favicon?domain_url={{link.linkUrl}}" alt="" /></mat-cell>
+            </ng-container>
+    
+        
+            <ng-container matColumnDef="alias">
+              <mat-header-cell *matHeaderCellDef> <strong>Alias</strong> </mat-header-cell>
+              <mat-cell *matCellDef="let link"> {{link.alias}} </mat-cell>
+            </ng-container>
+        
+            
+            <ng-container matColumnDef="linkUrl">
+              <mat-header-cell mat-header-cell *matHeaderCellDef> <strong>Link Url</strong> </mat-header-cell>
+              <mat-cell *matCellDef="let link"> {{link.linkUrl}} </mat-cell>
+            </ng-container>
+        
+           
+            <ng-container matColumnDef="shortDescription">
+              <mat-header-cell *matHeaderCellDef> <strong>Description</strong> </mat-header-cell>
+              <mat-cell *matCellDef="let link"> {{link.shortDescription}} </mat-cell>
+            </ng-container>
+        
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row
+                *matRowDef="let link; columns: displayedColumns; let i = index;"
+                class="link-list-item"
+                (click)="openLink(link.linkUrl);" 
+                [lg-ctx-menu]="linkMenuItems" 
+                [target-item]="link"
+                draggable [dragScope]="'link'"
+                droppable [dropScope]="'link'"
+                [dragData]="link"
+                (onDrop)="reorderLink($event, link);"
+                [dragTransitClass]="'dragTransit'"
+                [dragHintClass]="'dragHint'" 
+                [dragOverClass]="'dragOver'"
+            >
+            </mat-row>
+          </mat-table>
+        
+          <mat-paginator class="paginator" #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+
     <div class="empty-state" *ngIf="links.length === 0">
         <mat-icon>not_interested</mat-icon>
         <label>Nothing to Display</label>
     </div>
   </div>
+</div>
+<div class="copy-container" >
+  <input #linkurl (click)="copy();">
 </div>

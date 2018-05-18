@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    width: 100%;
 }
 
 .toolbar-container {
@@ -10,11 +11,11 @@
 
 .link-container {
     display: flex;
-    flex-flow: row wrap;
     margin: 10px;
     flex: 1 1 auto;
     height: 100%;
     align-content: flex-start;
+    flex-direction: column
 }
 
 mat-card {
@@ -26,14 +27,24 @@ mat-card {
     font-family: nunito;
     font-weight: bold;
     color: #686868;
-    cursor: pointer;
     width: 250px;
     height: 150px;
     justify-content: flex-start;
+    -webkit-user-drag: element!important;
 }
 
 .category-card:hover {
-    background-color:rgba(63, 81, 181, 0.1); //#f5f5f5;
+    background-color: rgba(0, 96, 100, 0.1); 
+    cursor: pointer;
+}
+
+.link-list-item {
+    font-family: nunito;
+    color: #686868;
+}
+
+.link-list-item:hover {
+    background-color: rgba(0, 96, 100, 0.1); 
     cursor: pointer;
 }
 
@@ -75,23 +86,50 @@ mat-card {
 }
 
 .dragTransit {
-    border: 2px dashed rgba(63, 81, 181, 1);
+    border: 2px dashed rgba(0, 96, 100, 1);
 }
 
 .dragHint {
-    border: 2px dashed rgba(63, 81, 181, 0.5);
+    border: 2px dashed rgba(0, 96, 100, 0.5);
 
     .dragOverlay {
         display: block;
     }
+
+    .dragOverlayTable { 
+        display: block;
+    }
+
+    .mat-cell.index-cell {
+        transition: .5s;
+        width: 50px;
+        margin: 5px;
+        color: #686868;
+    }
+
+    .mat-header-cell.index-cell { 
+        transition: .5s;
+        width: 50px;
+        margin: 5px;
+        color: #686868;
+    }
 }
 
 .dragOver {
-    border: 2px solid #ff4081;
+    border: 2px solid #880e4f;
 
     .dragOverlay {
-        color: #ff4081;
+        color: #880e4f;
     }
+
+    .dragOverlayTable { 
+        color: #880e4f;
+    }
+}
+
+.dragOverlayTable {
+    display: none;
+    font-size: 25px;
 }
 
 .dragOverlay {
@@ -100,6 +138,99 @@ mat-card {
     bottom: 5px;
     z-index: 100;
     font-size: 25px;
+}
+
+.addLink {
+    padding-right: 10px;
+}
+
+span.tooltip-content {
+    background: #686868!important;
+    opacity: 0.9!important;
+    font-size: 10px!important;
+    text-align: center!important;
+}
+
+span.tooltip-content::before {
+    display: none;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.searchBar {
+    color: #686868;
+    height: 40px;
+    width: 100%;
+    font-size: 15px;
+    flex: 1 1 auto;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.copy-container {
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+}
+
+.copy-container input {
+    height: 0px;
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    position: absolute;
+    z-index: -100000000;
+}
+
+.listView {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardView {
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    align-content: flex-start;
+}
+
+.mat-cell.icon-cell {
+    width: 50px;
+    margin: 5px;
+    flex: none;
+}
+
+.mat-header-cell.icon-cell {
+    width: 50px;
+    margin: 5px;
+    flex: none;
+}
+
+.mat-cell.index-cell {
+    width: 0px;
+    margin: 0px;
+    flex: none;
+}
+
+.mat-header-cell.index-cell {
+    width: 0px;
+    margin: 0px;
+    flex: none;
+}
+
+.table-card {
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    display: block;
+    position: relative;
+    border-radius: 2px;
+    background-color: #fff;
 }
 
 @media only screen and (max-width: 540px) {
