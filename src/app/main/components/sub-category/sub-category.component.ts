@@ -127,8 +127,10 @@ export class SubCategoryComponent implements OnInit {
   }
 
   writeSubCategoryIdsToCache() {
-    let subcategoryIds = this.subCategories.map((subcategory) => {
-      return subcategory.id;
+    let subcategoryIds = [];
+    
+    this.subCategories.forEach((subcategory) => {
+      subcategoryIds.push(subcategory.id);
     });
 
     this.categoryCacheService.storeCategoryStucture(this.categoryId, subcategoryIds);
