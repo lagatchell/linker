@@ -29,7 +29,7 @@ export class RegisterComponent implements OnInit {
       this.passwordFail = false;
       if (this.email !== undefined && this.password1 !== undefined) {
         this.authService.register(this.email, this.password1).then(() => {
-          //this.router.navigate(['/']);
+          this.router.navigate(['/']);
         })
         .catch((error) => {
           this.registerErrorMessage = error;
