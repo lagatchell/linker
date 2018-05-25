@@ -141,6 +141,29 @@ mat-card {
     font-size: 25px;
 }
 
+.dragPlaceholder {
+    border: 2px dashed #e1e1e1!important;
+    box-shadow: unset!important;
+
+    .dragOverlay {
+        visibility: visible!important;
+        color: #e1e1e1;
+    }
+
+    .dragOverlayTable { 
+        visibility: visible!important;
+        color: #e1e1e1;
+    }
+}
+
+.dragPlaceholder:hover {
+    background-color: transparent;
+}
+
+.dragPlaceholder>* {
+    visibility: hidden!important;
+}
+
 .addLink {
     padding-right: 10px;
 }
@@ -167,6 +190,15 @@ span.tooltip-content::before {
     width: 100%;
     font-size: 15px;
     flex: 1 1 auto;
+}
+
+.googleSearchBar {
+    color: #686868;
+    height: 40px;
+    width: 100%;
+    font-size: 15px;
+    flex: 1 1 auto;
+    margin-right: 25px;
 }
 
 mat-form-field {

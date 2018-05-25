@@ -24,6 +24,7 @@ export class LinkGridComponent implements OnInit {
   searchTerm: string = '';
   showSearch: boolean = false;
   showSearchMobile: boolean = false;
+  googleSearchTerm: string = '';
 
   @ViewChild('linkurl') linkurl: ElementRef;
 
@@ -201,9 +202,25 @@ export class LinkGridComponent implements OnInit {
     this.linkService.searchTerm.next(this.searchTerm);
   }
 
+  performGoogleSearch() {
+    let httpFormat = new RegExp("^(http|https)://", "i");
+    let isUrl = httpFormat.test(this.googleSearchTerm);
+
+    if (isUrl) {
+      window.open(this.googleSearchTerm, "_blank");
+    }
+    else {
+      window.open(`https://www.google.com/search?q=${this.googleSearchTerm}`, "_blank");
+    }
+  }
+
   clearSearch() {
     this.searchTerm = '';
     this.linkService.searchTerm.next('');
+  }
+
+  clearGoogleSearch() {
+    this.googleSearchTerm = '';
   }
 
   onResize(event) {

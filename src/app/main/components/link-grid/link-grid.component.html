@@ -4,6 +4,15 @@
         <div>
           <label>{{(category)? category.title : ''}}</label>
         </div>
+        <div class="googleSearchBar" *ngIf="!category">
+            <mat-icon>search</mat-icon>
+            <mat-form-field >
+                <input matInput placeholder="Search Google or type URL" [(ngModel)]="googleSearchTerm" (keyup.enter)="performGoogleSearch();">
+                <button mat-button *ngIf="googleSearchTerm" matSuffix mat-icon-button aria-label="Clear" (click)="clearGoogleSearch();">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
         <span class="toolbar-spacer"></span>
         <div class="search-container" *ngIf="category">
           <button mat-icon-button matTooltip="Search" (click)="toggleSearch();" >
@@ -56,6 +65,7 @@
         [dragTransitClass]="'dragTransit'"
         [dragHintClass]="'dragHint'" 
         [dragOverClass]="'dragOver'"
+        [dragClass]="'dragPlaceholder'"
       >
         <mat-card-title>
             <label class="clickable"><img class="link-favicon" src="https://plus.google.com/_/favicon?domain_url={{linkItem.linkUrl}}" alt="favicon" /> {{ (linkItem.alias.length>45)? (linkItem.alias | slice:0:45)+'...':(linkItem.alias) }}</label>
@@ -116,6 +126,7 @@
                 [dragTransitClass]="'dragTransit'"
                 [dragHintClass]="'dragHint'" 
                 [dragOverClass]="'dragOver'"
+                [dragClass]="'dragPlaceholder'"
             >
             </mat-row>
           </mat-table>
