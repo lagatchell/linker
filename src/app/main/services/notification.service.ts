@@ -17,8 +17,8 @@ export class NotificationService {
   ) { }
 
   getNotifications$() {
-    let sharedCategoryRequests = this.shareService.getCategoryShareRequests$();
-    let followRequests = this.friendService.getFriendRequests$();
+    const sharedCategoryRequests = this.shareService.getCategoryShareRequests$();
+    const followRequests = this.friendService.getFriendRequests$();
 
     return Observable.combineLatest(sharedCategoryRequests, followRequests).map(([categoryRequests, friendRequests]) => {
       return {

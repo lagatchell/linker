@@ -15,7 +15,7 @@
         </div>
         <span class="toolbar-spacer"></span>
         <div class="search-container" *ngIf="category">
-          <button mat-icon-button matTooltip="Search" (click)="toggleSearch();" >
+          <button mat-icon-button (click)="toggleSearch();" >
             <mat-icon *ngIf="!showSearch && !showSearchMobile">search</mat-icon>
             <mat-icon *ngIf="showSearch || showSearchMobile" color="primary">search</mat-icon>
             </button>
@@ -29,15 +29,12 @@
           </div>
         </div>
         <button mat-icon-button (click)="changeView()" *ngIf="category">
-          <mat-icon *ngIf="listView" matTooltip="Card View">view_module</mat-icon>
-          <mat-icon *ngIf="!listView" matTooltip="List View">view_list</mat-icon>
+          <mat-icon *ngIf="listView">view_module</mat-icon>
+          <mat-icon *ngIf="!listView">view_list</mat-icon>
         </button>
-        <span role="tooltip" aria-haspopup="true" class="tooltip tooltip-xs tooltip-bottom-left">
-          <button mat-icon-button class="addLink" (click)="addLink();" *ngIf="category && !isSharedFolder">
-            <mat-icon>link</mat-icon>+
-          </button>
-          <span class="tooltip-content">Add Link</span>
-        </span>
+        <button mat-icon-button class="addLink" (click)="addLink();" *ngIf="category && !isSharedFolder">
+          <mat-icon>link</mat-icon>+
+        </button>
     </mat-toolbar-row>
     <mat-toolbar-row [hidden]="!showSearchMobile" class="searchBar">
       <mat-form-field>       
@@ -54,7 +51,8 @@
     <div class="cardView" *ngIf="!listView && links.length > 0">
       <mat-card *ngFor="let linkItem of links; let i = index;" 
         class="category-card" 
-        matTooltip="{{linkItem.linkUrl}}" 
+        matTooltip="{{linkItem.linkUrl}}"
+        matTooltipShowDelay="300"
         (click)="openLink(linkItem.linkUrl);" 
         [lg-ctx-menu]="linkMenuItems" 
         [target-item]="linkItem"
@@ -116,7 +114,9 @@
             <mat-row
                 *matRowDef="let link; columns: displayedColumns; let i = index;"
                 class="link-list-item"
-                (click)="openLink(link.linkUrl);" 
+                (click)="openLink(link.linkUrl);"
+                matTooltip="{{link.linkUrl}}"
+                matTooltipShowDelay="500"
                 [lg-ctx-menu]="linkMenuItems" 
                 [target-item]="link"
                 draggable [dragScope]="'link'"

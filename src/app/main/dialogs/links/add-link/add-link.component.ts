@@ -1,11 +1,11 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { LinkService } from '../../../services/link.service';
 import { LinkItem } from '../../../models/link-item';
 
 @Component({
-  selector: 'add-link-dialog',
+  selector: 'app-add-link-dialog',
   templateUrl: './add-link.component.html',
   styleUrls: ['./add-link.component.scss']
 })
@@ -13,7 +13,7 @@ export class AddLinkDialog implements OnInit {
 
   linkAlias: string;
   linkUrl: string;
-  linkDescription: string = "";
+  linkDescription = '';
 
   constructor(
     public dialogRef: MatDialogRef<AddLinkDialog>,
@@ -29,13 +29,13 @@ export class AddLinkDialog implements OnInit {
   }
 
   createLink() {
-    if (this.linkUrl !== null && this.linkUrl !== undefined && this.linkUrl !== '' && this.linkAlias !== null && this.linkAlias !== undefined && this.linkAlias !== '') {
-      let newLink: LinkItem = new LinkItem(
+    if (this.linkUrl && this.linkUrl !== '' && this.linkAlias && this.linkAlias !== '') {
+      const newLink: LinkItem = new LinkItem(
         this.linkUrl,
         this.linkAlias,
         this.linkDescription
       );
-      
+
       this.linkService.createLinkItem(this.data.categoryId, newLink);
       this.onNoClick();
     }

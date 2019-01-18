@@ -18,7 +18,7 @@ import { AuthService } from '../../../auth/services/auth.service';
     ])
   ],
   exports: [
-    RouterModule
+    RouterModule,
   ]
 })
 

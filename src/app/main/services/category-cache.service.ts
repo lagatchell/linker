@@ -11,25 +11,24 @@ export class CategoryCacheService {
     this.cache[categoryId] = subcategoryIds;
   }
 
-  isParentOfCategory(possibleParentId, possibleChildId) : boolean {
-    let children = this.cache[possibleParentId];
+  isParentOfCategory(possibleParentId, possibleChildId): boolean {
+    const children = this.cache[possibleParentId];
 
     if (children !== undefined) {
       for (let i = 0; i < children.length; i++) {
-        let childId = children[i];
+        const childId = children[i];
         if (childId === possibleChildId) {
           return true;
-        }
-        else {
+        } else {
           if (this.cache[childId] !== undefined) {
-            return this.isParentOfCategory(childId, possibleChildId) 
+            return this.isParentOfCategory(childId, possibleChildId);
           }
         }
       }
     }
 
     return false;
-    
+
   }
 
 }

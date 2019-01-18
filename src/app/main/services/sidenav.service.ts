@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class SidenavService {
 
-  sideNavOpenState: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  isOpen = true;
 
   constructor() { }
 
+  toggle(openState: boolean = !this.isOpen) {
+    this.isOpen = openState;
+  }
 }

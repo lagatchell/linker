@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
-import { CategoryService } from './category.service';
 import { AuthService } from '../../auth/services/auth.service';
 import { MatSnackBar } from '@angular/material';
 import { ShareService } from './share.service';
 import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/operators/combineLatest';
 
 @Injectable()
 export class FriendsService {
@@ -18,13 +16,13 @@ export class FriendsService {
   ) { }
 
   getFriends$() {
-    let friendList = this.afdb.list<any>(`${this.authService.authUser.uid}/friends`).valueChanges();
-    let userList = this.afdb.list<any>(`users`).valueChanges();
+    const friendList = this.afdb.list<any>(`${this.authService.authUser.uid}/friends`).valueChanges();
+    const userList = this.afdb.list<any>(`users`).valueChanges();
     return Observable.combineLatest(friendList, userList).map(([friends, users]) => {
-      
+
       return friends.map((friend) => {
-        let user = users.find((user) => {
-          return user.id === friend.userId;
+        const user = users.find((usr) => {
+          return usr.id === friend.userId;
         });
 
         if (user) {
@@ -33,15 +31,15 @@ export class FriendsService {
             email: user.email,
             id: friend.id
           };
-        };
+        }
 
       });
     });
   }
 
   addFriend(friend: any) {
-    let dbRef1 = this.afdb.database.ref(`${this.authService.authUser.uid}/friends`);
-    let newFriend1 = dbRef1.push();
+    const dbRef1 = this.afdb.database.ref(`${this.authService.authUser.uid}/friends`);
+    const newFriend1 = dbRef1.push();
 
     newFriend1.set ({
       userId: friend.userId,
@@ -49,12 +47,12 @@ export class FriendsService {
     }).then(() => {
       this.snackBar.open(`You are now friends with ${friend.senderEmail}`, '', {
         duration: 2000,
-    })
+    });
     });
 
 
-    let dbRef2 = this.afdb.database.ref(`${friend.userId}/friends`);
-    let newFriend2 = dbRef2.push();
+    const dbRef2 = this.afdb.database.ref(`${friend.userId}/friends`);
+    const newFriend2 = dbRef2.push();
     newFriend2.set ({
       userId: this.authService.authUser.uid,
       id: newFriend2.key
@@ -78,12 +76,12 @@ export class FriendsService {
 
   removeUserFromOtherFollowersFollowList(followingUserId: string) {
     this.afdb.database.ref(`${followingUserId}/friends`).once('value', (snapShot) => {
-      let followList = snapShot.val();
+      const followList = snapShot.val();
 
       for (const followId in followList) {
         if (followList.hasOwnProperty(followId)) {
           const followRecord = followList[followId];
-          if (followRecord.userId == this.authService.authUser.uid) {
+          if (followRecord.userId === this.authService.authUser.uid) {
             this.afdb.database.ref(`${followingUserId}/friends/${followRecord.id}`).remove();
           }
         }
@@ -95,14 +93,14 @@ export class FriendsService {
   getFriendRequests$() {
     return this.afdb.list<any>(`/friendRequests`).valueChanges().map((friendRequests: any[]) => {
       return friendRequests.filter((friendRequest: any) => {
-        return friendRequest.receiverEmail == this.authService.authUser.email;
+        return friendRequest.receiverEmail === this.authService.authUser.email;
       });
     });
   }
 
   sendFriendRequest(receiverEmail: string) {
-    let dbRef = this.afdb.database.ref(`friendRequests`);
-    let newFriendRequest = dbRef.push();
+    const dbRef = this.afdb.database.ref(`friendRequests`);
+    const newFriendRequest = dbRef.push();
 
     newFriendRequest.set ({
       userId: this.authService.authUser.uid,

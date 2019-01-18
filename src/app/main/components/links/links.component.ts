@@ -6,32 +6,27 @@ import { Observable } from 'rxjs/Observable';
 import { CategoryService } from '../../services/category.service';
 
 @Component({
-  selector: 'links',
+  selector: 'app-links',
   templateUrl: './links.component.html',
   styleUrls: ['./links.component.scss']
 })
 export class LinksComponent implements OnInit {
   sideNavOpenState: Observable<boolean>;
-  sideNavMode: string = 'side';
-  showSearch: boolean = false;
-  searchTerm: string = '';
+  sideNavMode = 'side';
+  showSearch = false;
+  searchTerm = '';
 
   @ViewChild('drawer') sideNav: MatDrawer;
 
   constructor(
     private dialog: MatDialog,
-    private sideNavService: SidenavService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    public sideNavService: SidenavService,
   ) { }
 
   ngOnInit() {
-    this.sideNavOpenState = this.sideNavService.sideNavOpenState;
     this.onResize({
       target: window
-    });
-
-    this.sideNav.onClose.subscribe(() => {
-      this.sideNavService.sideNavOpenState.next(false);
     });
   }
 
@@ -49,13 +44,13 @@ export class LinksComponent implements OnInit {
     const elementWidth = event.target.innerWidth;
 
     if (elementWidth <= 600) {
-        this.sideNavMode = 'over';
-        this.sideNavService.sideNavOpenState.next(false);
+      this.sideNavMode = 'over';
+      this.sideNavService.toggle(false);
     }
 
     if (elementWidth > 600) {
       if (this.sideNavMode === 'over') {
-        this.sideNavService.sideNavOpenState.next(true);
+        this.sideNavService.toggle(true);
       }
       this.sideNavMode = 'side';
     }
@@ -67,11 +62,10 @@ export class LinksComponent implements OnInit {
 
     if (this.showSearch) {
       setTimeout(() => {
-        let search = document.getElementById('categorySearch');
+        const search = document.getElementById('categorySearch');
         search.focus();
       });
-    }
-    else {
+    } else {
       this.clearSearch();
     }
   }

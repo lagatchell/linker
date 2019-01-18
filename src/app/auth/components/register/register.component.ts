@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'linker-register',
+  selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
@@ -11,18 +11,18 @@ export class RegisterComponent implements OnInit {
   email: string;
   password1: string;
   password2: string;
-  passwordFail: boolean = false;
-  registerErrorMessage: string = '';
+  passwordFail = false;
+  registerErrorMessage = '';
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router
   ) { }
 
   ngOnInit() {
   }
 
-  signUp(){
+  signUp() {
     if (this.password1 !== this.password2) {
       this.passwordFail = true;
     } else {
@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  cancel(){
+  cancel() {
     this.router.navigate(['/login']);
   }
 }

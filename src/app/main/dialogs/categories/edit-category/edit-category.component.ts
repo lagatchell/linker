@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { CategoryService } from '../../../services/category.service';
 
 @Component({
-  selector: 'edit-category',
+  selector: 'app-edit-category',
   templateUrl: './edit-category.component.html',
   styleUrls: ['./edit-category.component.scss']
 })

@@ -13,12 +13,11 @@ export class UserService {
   updateUser(newEmail: string, newPassword = null) {
     if (newPassword === null) {
         return this.updateEmail(newEmail);
-    }
-    else {
-        return this.updateEmail(newEmail)
-        .then(() => { 
-            return this.updatePassword(newPassword)
-        });
+    } else {
+      return this.updateEmail(newEmail)
+      .then(() => {
+        return this.updatePassword(newPassword);
+      });
     }
   }
 

@@ -12,7 +12,7 @@ export class EditLinkDialog implements OnInit {
 
   linkAlias: string;
   linkUrl: string;
-  linkDescription: string = "";
+  linkDescription = '';
 
   @ViewChild('linkurl') linkurl: ElementRef;
 
@@ -34,7 +34,7 @@ export class EditLinkDialog implements OnInit {
   }
 
   saveLink() {
-    if (this.linkUrl !== null && this.linkUrl !== undefined && this.linkUrl !== '' && this.linkAlias !== null && this.linkAlias !== undefined && this.linkAlias !== '') {
+    if (this.linkUrl && this.linkUrl !== '' && this.linkAlias && this.linkAlias !== '') {
       this.linkService.updateLinkItem(this.data.categoryId, this.data.id, this.linkAlias, this.linkDescription, this.linkUrl);
       this.onNoClick();
     }
@@ -43,7 +43,7 @@ export class EditLinkDialog implements OnInit {
   copyToClipBoard() {
     this.linkurl.nativeElement.select();
     document.execCommand('Copy');
-    
+
     this.snackBar.open('Copied to Clipboard', '', {
       duration: 2000,
     });

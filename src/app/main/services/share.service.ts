@@ -24,8 +24,8 @@ export class ShareService {
    }
 
   sendCategoryShareRequest(shareRequest: any) {
-    let dbRef = this.afdb.database.ref(`shareRequests/categories`);
-    let newShareRequest = dbRef.push();
+    const dbRef = this.afdb.database.ref(`shareRequests/categories`);
+    const newShareRequest = dbRef.push();
     newShareRequest.set({
       categoryId: shareRequest.categoryId,
       ownerId: this.authService.authUser.uid,
@@ -46,14 +46,14 @@ export class ShareService {
   getCategoryShareRequests$() {
     return this.afdb.list<ShareRequest>(`/shareRequests/categories`).valueChanges().map((shareRequests: ShareRequest[]) => {
       return shareRequests.filter((shareRequest: ShareRequest) => {
-        return shareRequest.receiverEmail == this.authService.authUser.email;
+        return shareRequest.receiverEmail === this.authService.authUser.email;
       });
     });
   }
 
   acceptSharedCategory(shareRequest: ShareRequest) {
-    let dbRef = this.afdb.database.ref(`${this.authService.authUser.uid}/sharedWithMe/categories/${shareRequest.ownerId}`);
-    let newSharedCategory = dbRef.push();
+    const dbRef = this.afdb.database.ref(`${this.authService.authUser.uid}/sharedWithMe/categories/${shareRequest.ownerId}`);
+    const newSharedCategory = dbRef.push();
     newSharedCategory.set({
       categoryId: shareRequest.categoryId,
       ownerId: shareRequest.ownerId,
@@ -68,14 +68,14 @@ export class ShareService {
   }
 
   getSharedCatgoriesByOwnerId$(friendId: string) {
-    let sharedCategories = this.afdb.list<any>(`${this.authService.authUser.uid}/sharedWithMe/categories/${friendId}`).valueChanges();
-    let ownersCategories = this.afdb.list<any>(`${friendId}/categories`).valueChanges();
+    const sharedCategories = this.afdb.list<any>(`${this.authService.authUser.uid}/sharedWithMe/categories/${friendId}`).valueChanges();
+    const ownersCategories = this.afdb.list<any>(`${friendId}/categories`).valueChanges();
 
     return Observable.combineLatest(sharedCategories, ownersCategories).map(([sharedCats, ownersCats]) => {
-      let returnedCategories = [];
+      const returnedCategories = [];
       sharedCats.forEach((sharedCategory) => {
         ownersCats.forEach((ownerCategory) => {
-          if (sharedCategory.categoryId == ownerCategory.id) {
+          if (sharedCategory.categoryId === ownerCategory.id) {
             returnedCategories.push(ownerCategory);
           }
         });
@@ -89,26 +89,26 @@ export class ShareService {
     return this.afdb.list<Category>(`${friendId}/categories`).valueChanges()
     .map((categories: Category[]) => {
       return categories.filter((category: Category) => {
-        return category.parentCategoryId == parentCategoryId;
+        return category.parentCategoryId === parentCategoryId;
       });
     });
   }
 
   removeSharedCategory(categoryId, friendId) {
     this.afdb.database.ref(`${this.authService.authUser.uid}/sharedWithMe/categories/${friendId}`).once('value', (snapShot) => {
-      let sharedCatgories = snapShot.val();
+      const sharedCatgories = snapShot.val();
 
       for (const categoryKey in sharedCatgories) {
         if (sharedCatgories.hasOwnProperty(categoryKey)) {
           const category = sharedCatgories[categoryKey];
-          if (category.categoryId == categoryId) {
+          if (category.categoryId === categoryId) {
             this.afdb.database.ref(`${this.authService.authUser.uid}/sharedWithMe/categories/${friendId}/${category.id}`).remove();
           }
         }
       }
     });
 
-    if (this.category.id == categoryId) {
+    if (this.category.id === categoryId) {
       this.linkService.category.next(null);
     }
   }

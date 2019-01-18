@@ -1,17 +1,17 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { UserService } from '../../../services/user.service';
 
 @Component({
-  selector: 'user-edit',
+  selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.scss']
 })
 export class UserEditDialog implements OnInit {
   email: string;
   password: string;
-  updateErrorMessage: string = '';
+  updateErrorMessage = '';
   user: any = null;
 
   constructor(
@@ -33,16 +33,14 @@ export class UserEditDialog implements OnInit {
       .catch((error) => {
         this.updateErrorMessage = error;
       });
-    }
-    else if (this.user.email !== this.email && this.email !== '') {
+    } else if (this.user.email !== this.email && this.email !== '') {
       this.userService.updateUser(this.email).then(() => {
         this.onNoClick();
       })
       .catch((error) => {
         this.updateErrorMessage = error;
       });
-    }
-    else if (this.password !== '' && this.password !== null) {
+    } else if (this.password !== '' && this.password !== null) {
       this.userService.updatePassword(this.password).then(() => {
         this.onNoClick();
       })

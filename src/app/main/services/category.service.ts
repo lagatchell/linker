@@ -5,25 +5,21 @@ import { AuthService } from '../../auth/services/auth.service';
 import { Category } from '../models/category';
 import { MatSnackBar } from '@angular/material';
 import { LinkService } from './link.service';
-import { filter } from 'rxjs/operator/filter';
-import { map } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
-import { combineLatest } from 'rxjs/operators/combineLatest';
 
 @Injectable()
 export class CategoryService {
 
   category: Category = null;
   searchTerm: BehaviorSubject<string> = new BehaviorSubject('');
-  
+
   constructor(
     private snackBar: MatSnackBar,
     private authService: AuthService,
     private afdb: AngularFireDatabase,
     private linkService: LinkService
-  ) { 
+  ) {
       this.linkService.category.subscribe((category: Category) => {
         this.category = category;
       });
@@ -41,8 +37,7 @@ export class CategoryService {
         return of(query.categories.filter((category: Category) => {
           return category.title.toLowerCase().indexOf(query.searchTerm.toLowerCase()) !== -1;
         }));
-      }
-      else {
+      } else {
         return of(query.categories.filter((category: Category) => {
           return (category.parentCategoryId === undefined) || (category.parentCategoryId == null);
         }));
@@ -59,12 +54,12 @@ export class CategoryService {
   }
 
   createLinkCategory(category: Category, parentCategoryId?) {
-    let dbRef = this.afdb.database.ref(this.authService.authUser.uid + '/categories');
-    let newCategory = dbRef.push();
+    const dbRef = this.afdb.database.ref(this.authService.authUser.uid + '/categories');
+    const newCategory = dbRef.push();
     newCategory.set ({
         title: category.title,
         id: newCategory.key,
-        parentCategoryId: (parentCategoryId !== undefined && parentCategoryId !== null)? parentCategoryId : null
+        parentCategoryId: (parentCategoryId !== undefined && parentCategoryId !== null) ? parentCategoryId : null
     });
   }
 
@@ -73,7 +68,7 @@ export class CategoryService {
     .update({
         title: categoryTitle
     })
-    .then(()=>{
+    .then(() => {
       this.snackBar.open('Update Successful', '', {
         duration: 2000,
       });
@@ -101,11 +96,11 @@ export class CategoryService {
 
   deleteLinkSubCategories(parentCategoryId: string) {
     return this.afdb.database.ref(`${this.authService.authUser.uid}/categories`).once('value', (snapShot) => {
-      let categoryObjects = snapShot.val();
+      const categoryObjects = snapShot.val();
 
       for (const categoryId in categoryObjects) {
         if (categoryObjects.hasOwnProperty(categoryId)) {
-          if (categoryObjects[categoryId].parentCategoryId == parentCategoryId) {
+          if (categoryObjects[categoryId].parentCategoryId === parentCategoryId) {
             this.deleteLinkCategory(categoryObjects[categoryId].id);
           }
         }
@@ -118,7 +113,7 @@ export class CategoryService {
     .update({
       parentCategoryId: parentCategoryId
     })
-    .then(()=>{
+    .then(() => {
       this.snackBar.open('Move Successful', '', {
         duration: 2000,
     });

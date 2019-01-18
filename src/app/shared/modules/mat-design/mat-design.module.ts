@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 
 // Material
-import { 
+import {
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -34,9 +34,8 @@ import {
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
   } from '@angular/material';
-  import {CdkTableModule} from '@angular/cdk/table';
   import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
@@ -73,7 +72,7 @@ import {
         MatTableModule,
         MatTabsModule,
         MatToolbarModule,
-        MatTooltipModule
+        MatTooltipModule,
     ]
 })
 

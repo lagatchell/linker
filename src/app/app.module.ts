@@ -93,7 +93,7 @@ import { LinkViewService } from './main/services/link-view.service';
     AcceptFriendRequestDialog,
     SendFriendRequestDialog,
     UserEditDialog
-  ], 
+  ],
   providers: [
     AuthService,
     CategoryService,

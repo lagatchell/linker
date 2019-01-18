@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../../../../auth/services/auth.service';
 import { NotificationService } from '../../../../../main/services/notification.service';
-import { ShareService } from '../../../../../main/services/share.service';
 import { ShareRequest } from '../../../../../main/models/share-request';
 import { AcceptFriendRequestDialog } from '../../../../../main/dialogs/friends/accept-friend-request/accept-friend-request.component';
 import { MatDialog } from '@angular/material';
@@ -12,45 +10,36 @@ import { SidenavService } from '../../../../../main/services/sidenav.service';
 import { UserEditDialog } from '../../../../../main/dialogs/user/user-edit/user-edit.component';
 
 @Component({
-  selector: 'nav-bar',
+  selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent implements OnInit {
 
-  private user: any = null;
-  private categoryRequests: ShareRequest[] = [];
-  private linkRequests: any[] = [];
-  private friendRequests: any[] = [];
-  private notificationCount: number = 0;
-  public notificationText: string = '';
-  private sideNavOpenState: boolean = true;
+  _user: any = null;
+  _categoryRequests: ShareRequest[] = [];
+  _friendRequests: any[] = [];
+  _notificationCount = 0;
 
   constructor(
-    private router: Router,
     private dialog: MatDialog,
     private authService: AuthService,
     private notificationService: NotificationService,
-    private shareService: ShareService,
     private sideNavService: SidenavService
   ) { }
 
   ngOnInit() {
     this.getUserAuthState();
-
-    this.sideNavService.sideNavOpenState.subscribe((openState) => {
-      this.sideNavOpenState = openState;
-    });
   }
 
   getUserAuthState() {
     this.authService.afAuth.auth.onAuthStateChanged(user => {
-        if (user !== null) {
-            this.user = user;
-            this.getUserNotifications();
-        } else {
-            this.user = null;
-        }
+      if (user) {
+        this._user = user;
+        this.getUserNotifications();
+      } else {
+        this._user = null;
+      }
     });
   }
 
@@ -60,26 +49,9 @@ export class NavBarComponent implements OnInit {
 
   getUserNotifications() {
     this.notificationService.getNotifications$().subscribe((notifications) => {
-      this.categoryRequests = notifications.categoryRequests;
-      this.friendRequests = notifications.friendRequests;
-      this.setNotificationCount();
+      this._categoryRequests = notifications.categoryRequests;
+      this._friendRequests = notifications.friendRequests;
     });
-  }
-
-  setNotificationCount() {
-    let count = 0;
-    count += this.categoryRequests.length;
-    count += this.linkRequests.length;
-    count += this.friendRequests.length;
-    this.notificationCount = count;
-
-    if (this.notificationCount === 1) {
-      this.notificationText = `${this.notificationCount} notification`;
-    }
-    else {
-      this.notificationText = `${this.notificationCount} notifications`;
-    }
-
   }
 
   openAcceptFriendRequestDialog(friendRequest) {
@@ -115,7 +87,7 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  collapse() {
-    this.sideNavService.sideNavOpenState.next(!this.sideNavOpenState);
+  toggle() {
+    this.sideNavService.toggle();
   }
 }

@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FriendsService } from '../../../services/friends.service';
 
 @Component({
-  selector: 'send-friend-request',
+  selector: 'app-send-friend-request',
   templateUrl: './send-friend-request.component.html',
   styleUrls: ['./send-friend-request.component.scss']
 })
